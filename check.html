@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#003087">
+<title>Rothschild Ward Equipment Check — Stoke Mandeville</title>
+<style>
+:root{--blue:#003087;--blue2:#005EB8;--blue3:#0072CE;--aqua:#41B6E6;--green:#007F3B;--green2:#78BE20;--red:#DA291C;--amber:#ED8B00;--grey1:#231f20;--grey2:#425563;--grey3:#768692;--grey4:#D8DDE0;--grey5:#F0F4F5;--white:#fff;--font:'Frutiger','Arial',sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font);background:var(--grey5);color:var(--grey1);min-height:100vh;-webkit-font-smoothing:antialiased;}
+.topbar{background:var(--blue);padding:0 16px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;box-shadow:0 2px 6px rgba(0,0,0,0.2);}
+.nhs-logo{background:white;color:var(--blue);font-weight:700;font-size:16px;padding:2px 7px;border-radius:3px;letter-spacing:-0.5px;}
+.topbar-title{color:white;font-size:13px;font-weight:600;text-align:center;line-height:1.3;}
+.topbar-time{color:var(--aqua);font-size:12px;text-align:right;min-width:50px;}
+.screen{display:none;}.screen.active{display:block;}
+
+/* STAFF SCREEN */
+.staff-wrap{padding:20px 16px;}
+.equip-hero{background:white;border-radius:10px;overflow:hidden;margin-bottom:20px;border:1px solid var(--grey4);}
+.equip-hero-img{width:100%;height:200px;background:var(--grey4);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.equip-hero-img img{width:100%;height:100%;object-fit:cover;}
+.equip-hero-placeholder{text-align:center;color:var(--grey3);}
+.equip-hero-placeholder div{font-size:52px;margin-bottom:8px;}
+.equip-hero-info{padding:14px 16px;}
+.equip-hero-info h2{font-size:19px;font-weight:700;color:var(--grey1);margin-bottom:4px;}
+.equip-hero-info p{font-size:13px;color:var(--grey2);}
+.freq-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+.freq-pill{font-size:11px;font-weight:700;padding:3px 10px;border-radius:10px;text-transform:uppercase;letter-spacing:0.3px;}
+.fp-daily{background:#E8F4F9;color:#0072CE;}
+.fp-weekly{background:#FEF3E2;color:#ED8B00;}
+.fp-monthly{background:#E8F4EE;color:#007F3B;}
+.fp-emergency{background:#FDECEA;color:#DA291C;}
+.last-check-box{background:white;border-radius:8px;border:1px solid var(--grey4);padding:12px 14px;margin-bottom:18px;font-size:13px;color:var(--grey2);}
+.last-check-box strong{color:var(--grey1);display:block;margin-bottom:2px;font-size:14px;}
+.form-group{margin-bottom:16px;}
+.form-group label{display:block;font-size:12px;font-weight:700;color:var(--grey2);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.4px;}
+.form-input{width:100%;border:2px solid var(--grey4);border-radius:8px;padding:13px 14px;font-size:16px;font-family:var(--font);color:var(--grey1);background:white;transition:border-color 0.2s;}
+.form-input:focus{outline:none;border-color:var(--blue3);}
+.start-btn{width:100%;background:var(--blue);color:white;border:none;padding:16px;font-size:17px;font-weight:700;border-radius:8px;cursor:pointer;margin-top:4px;}
+.start-btn:disabled{background:var(--grey3);cursor:not-allowed;}
+.config-notice{background:#FEF3E2;border:1px solid var(--amber);border-radius:8px;padding:12px 14px;margin-bottom:16px;font-size:13px;color:var(--grey2);}
+.config-notice strong{color:var(--amber);display:block;margin-bottom:3px;}
+
+/* CHECKLIST */
+.check-header{background:var(--blue);color:white;padding:14px 16px;}
+.check-header h2{font-size:17px;font-weight:700;margin-bottom:3px;}
+.check-header p{font-size:13px;opacity:0.8;margin-bottom:10px;}
+.progress-wrap{background:rgba(255,255,255,0.2);border-radius:4px;height:5px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--green2);border-radius:4px;transition:width 0.3s;}
+.progress-text{font-size:12px;color:rgba(255,255,255,0.8);margin-top:4px;}
+.main-img-section{background:white;border-bottom:2px solid var(--blue);}
+.main-img-wrap{width:100%;height:200px;background:var(--grey4);overflow:hidden;position:relative;}
+.main-img-wrap img{width:100%;height:100%;object-fit:cover;}
+.img-caption-bar{padding:8px 14px;background:white;border-bottom:1px solid var(--grey4);}
+.img-caption-bar p{font-size:13px;color:var(--grey2);font-style:italic;}
+.checks-body{padding-bottom:130px;}
+.cat-header{background:var(--blue2);color:white;padding:10px 16px;font-size:13px;font-weight:700;letter-spacing:0.3px;display:flex;align-items:center;gap:8px;}
+.cat-icon{width:22px;height:22px;background:rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;}
+
+/* ITEM ROW */
+.item-wrap{background:white;border-bottom:1px solid var(--grey4);}
+.item-wrap.critical{border-left:4px solid var(--red);}
+.item-row{padding:12px 16px;display:flex;align-items:flex-start;gap:10px;}
+.item-img-thumb{width:56px;height:56px;border-radius:8px;background:var(--grey4);flex-shrink:0;overflow:hidden;cursor:pointer;position:relative;}
+.item-img-thumb img{width:100%;height:100%;object-fit:cover;}
+.item-img-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--grey3);}
+.item-img-expand{position:absolute;bottom:2px;right:2px;background:rgba(0,0,0,0.5);color:white;font-size:9px;padding:1px 4px;border-radius:3px;}
+.item-text{flex:1;}
+.item-name{font-size:14px;font-weight:600;margin-bottom:2px;color:var(--grey1);}
+.item-desc{font-size:12px;color:var(--grey3);line-height:1.4;}
+.critical-tag{font-size:10px;background:#FDECEA;color:var(--red);padding:1px 6px;border-radius:6px;font-weight:700;margin-left:5px;text-transform:uppercase;}
+.ans-wrap{display:flex;flex-direction:column;gap:4px;flex-shrink:0;}
+.ans-btn{width:58px;padding:7px 4px;font-size:11px;font-weight:700;border-radius:6px;border:2px solid transparent;cursor:pointer;text-align:center;transition:all 0.15s;-webkit-tap-highlight-color:transparent;}
+.a-pass{background:#E8F4EE;color:var(--green);}
+.a-pass.active{background:var(--green);color:white;}
+.a-fail{background:#FDECEA;color:var(--red);}
+.a-fail.active{background:var(--red);color:white;}
+.a-na{background:var(--grey4);color:var(--grey2);}
+.a-na.active{background:var(--grey3);color:white;}
+.fail-note{background:#FDECEA;border-top:1px solid #f5c0bb;padding:10px 16px 10px 88px;}
+.fail-note-label{font-size:12px;font-weight:700;color:var(--red);margin-bottom:5px;}
+.fail-note-input{width:100%;border:1.5px solid #f5c0bb;border-radius:6px;padding:10px;font-size:13px;font-family:var(--font);resize:none;height:68px;background:white;}
+.fail-note-input:focus{outline:none;border-color:var(--red);}
+
+/* TEMPERATURE INPUT */
+.temp-input-wrap{background:#E8F4F9;border-top:1px solid var(--aqua);padding:12px 16px;}
+.temp-label{font-size:13px;font-weight:700;color:var(--blue);margin-bottom:6px;}
+.temp-input{width:120px;border:2px solid var(--blue3);border-radius:8px;padding:10px 14px;font-size:22px;font-weight:700;font-family:var(--font);color:var(--grey1);text-align:center;}
+.temp-input:focus{outline:none;}
+.temp-unit{font-size:16px;color:var(--grey3);margin-left:6px;}
+.temp-alert{background:var(--red);color:white;border-radius:8px;padding:12px 14px;margin-top:10px;font-size:13px;font-weight:600;line-height:1.5;display:none;}
+.temp-alert.show{display:block;}
+.temp-alert strong{display:block;font-size:14px;margin-bottom:6px;}
+
+/* RANGE INFO BOX */
+.range-info{background:#E8F4EE;border:1px solid var(--green);border-radius:8px;padding:10px 14px;margin:8px 16px;font-size:12px;color:var(--grey1);}
+.range-info strong{color:var(--green);display:block;margin-bottom:3px;}
+
+/* SUBMIT BAR */
+.submit-bar{position:fixed;bottom:0;left:0;right:0;background:white;border-top:2px solid var(--grey4);padding:10px 16px;z-index:50;}
+.submit-btn{width:100%;background:var(--blue);color:white;border:none;padding:14px;font-size:16px;font-weight:700;border-radius:8px;cursor:pointer;transition:background 0.2s;}
+.submit-btn:disabled{background:var(--grey3);cursor:not-allowed;}
+.submit-note{font-size:11px;color:var(--grey3);text-align:center;margin-top:5px;}
+
+/* COMPLETE SCREEN */
+.complete-wrap{padding:28px 20px;text-align:center;}
+.complete-icon{width:80px;height:80px;border-radius:50%;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:36px;}
+.ci-pass{background:#E8F4EE;color:var(--green);}
+.ci-fail{background:#FDECEA;color:var(--red);}
+.complete-wrap h2{font-size:22px;font-weight:700;margin-bottom:6px;}
+.complete-wrap p{font-size:14px;color:var(--grey2);margin-bottom:24px;}
+.summary-card{background:white;border-radius:10px;border:1px solid var(--grey4);overflow:hidden;text-align:left;margin-bottom:20px;}
+.summary-row{padding:12px 16px;border-bottom:1px solid var(--grey4);display:flex;justify-content:space-between;font-size:14px;}
+.summary-row:last-child{border-bottom:none;}
+.sr-label{color:var(--grey2);}
+.sr-val{font-weight:700;}
+.done-btn{width:100%;background:var(--blue);color:white;border:none;padding:14px;border-radius:8px;font-size:16px;font-weight:700;cursor:pointer;}
+
+/* LIGHTBOX */
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;}
+.lightbox.show{display:flex;}
+.lightbox img{max-width:100%;max-height:90vh;border-radius:10px;object-fit:contain;}
+.lightbox-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.2);color:white;border:none;width:36px;height:36px;border-radius:50%;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.lightbox-caption{position:absolute;bottom:20px;left:20px;right:20px;color:white;font-size:14px;text-align:center;background:rgba(0,0,0,0.5);padding:8px 12px;border-radius:8px;}
+
+/* TOAST */
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--grey1);color:white;padding:11px 20px;border-radius:22px;font-size:14px;font-weight:600;opacity:0;transition:all 0.3s;z-index:300;pointer-events:none;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="nhs-logo">NHS</div>
+  <div class="topbar-title">Rothschild Ward<br>Stoke Mandeville</div>
+  <div class="topbar-time" id="topTime"></div>
+</div>
+
+<!-- SCREEN 1: STAFF SIGN IN -->
+<div class="screen active" id="screen-staff">
+  <div class="staff-wrap">
+    <div class="config-notice" id="configNotice" style="display:none;">
+      <strong>⚙ Setup required</strong>
+      Add your Supabase keys to the CONFIG section of this file to enable data storage.
+    </div>
+    <div class="equip-hero" id="equipHero">
+      <div class="equip-hero-img" id="heroImgWrap">
+        <div class="equip-hero-placeholder"><div>🏥</div><p>Loading...</p></div>
+      </div>
+      <div class="equip-hero-info">
+        <h2 id="heroName">Loading equipment...</h2>
+        <p id="heroLocation"></p>
+        <div class="freq-badges" id="heroBadges"></div>
+      </div>
+    </div>
+    <div class="last-check-box" id="lastCheckBox" style="display:none;">
+      <strong>Last checked</strong>
+      <span id="lastCheckText"></span>
+    </div>
+    <div class="form-group">
+      <label>Full name</label>
+      <input class="form-input" id="staffName" type="text" placeholder="e.g. Sarah Jones" autocomplete="name">
+    </div>
+    <button class="start-btn" id="startBtn" onclick="startCheck()" disabled>Start Check</button>
+  </div>
+</div>
+
+<!-- SCREEN 2: CHECKLIST -->
+<div class="screen" id="screen-check">
+  <div class="check-header">
+    <h2 id="checkTitle"></h2>
+    <p id="checkSubtitle"></p>
+    <div class="progress-wrap"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="progress-text" id="progressText">0 of 0 answered</div>
+  </div>
+  <div class="main-img-section" id="mainImgSection" style="display:none;">
+    <div class="main-img-wrap"><img id="mainImg" src="" alt="Equipment"></div>
+    <div class="img-caption-bar"><p id="mainCaption"></p></div>
+  </div>
+  <div class="checks-body" id="checksBody"></div>
+  <div class="submit-bar">
+    <button class="submit-btn" id="submitBtn" onclick="submitCheck()" disabled>Submit Check</button>
+    <div class="submit-note" id="submitNote">Answer all items to submit</div>
+  </div>
+</div>
+
+<!-- SCREEN 3: COMPLETE -->
+<div class="screen" id="screen-complete">
+  <div class="complete-wrap">
+    <div class="complete-icon" id="completeIcon"></div>
+    <h2 id="completeTitle"></h2>
+    <p id="completeMsg"></p>
+    <div class="summary-card" id="completeSummary"></div>
+    <button class="done-btn" onclick="resetToStart()">Done</button>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">×</button>
+  <img id="lightboxImg" src="" alt="">
+  <div class="lightbox-caption" id="lightboxCaption"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+//  CONFIG — replace with your Supabase project credentials
+// ============================================================
+const CONFIG = {
+  supabaseUrl: 'YOUR_SUPABASE_URL',
+  supabaseKey: 'YOUR_SUPABASE_ANON_KEY',
+  ward: 'Rothschild Ward Stoke Mandeville'
+};
+
+// ============================================================
+//  EQUIPMENT DATA
+// ============================================================
+const EQUIPMENT_DB = {
+
+  cd_rothschild_am: {
+    name: 'Controlled Drugs Check — AM',
+    location: 'Rothschild Ward',
+    image: 'images/cd_cupboard.jpg',
+    imageCaption: 'Morning CD check — both nurses to sign. Check register balance matches physical stock.',
+    frequency: 'daily',
+    categories: [{
+      name: 'CD Check — Morning', icon: '💊',
+      items: [
+        { id: 'cd_am_register', name: 'CD register signed by two members of staff', desc: 'Both checking staff sign the CD register', critical: true, image: 'images/cd_register.jpg' },
+        { id: 'cd_am_balance', name: 'Register balance matches physical stock count', desc: 'Count all CDs and confirm balance matches register', critical: true },
+        { id: 'cd_am_cupboard_locked', name: 'CD cupboard locked after check', desc: 'Cupboard secured after completion of check', critical: true },
+        { id: 'cd_am_keys_returned', name: 'Keys returned to designated location', desc: 'CD keys returned immediately after use', critical: true },
+      ]
+    }]
+  },
+
+  cd_rothschild_pm: {
+    name: 'Controlled Drugs Check — PM',
+    location: 'Rothschild Ward',
+    image: 'images/cd_cupboard.jpg',
+    imageCaption: 'Evening CD check — both nurses to sign. Check register balance matches physical stock.',
+    frequency: 'daily',
+    categories: [{
+      name: 'CD Check — Evening', icon: '💊',
+      items: [
+        { id: 'cd_pm_register', name: 'CD register signed by two members of staff', desc: 'Both checking staff sign the CD register', critical: true, image: 'images/cd_register.jpg' },
+        { id: 'cd_pm_balance', name: 'Register balance matches physical stock count', desc: 'Count all CDs and confirm balance matches register', critical: true },
+        { id: 'cd_pm_cupboard_locked', name: 'CD cupboard locked after check', desc: 'Cupboard secured after completion of check', critical: true },
+        { id: 'cd_pm_keys_returned', name: 'Keys returned to designated location', desc: 'CD keys returned immediately after use', critical: true },
+      ]
+    }]
+  },
+
+  resusitaire_rothschild_daily: {
+    name: 'Resusitaire — Daily Top Check',
+    location: 'Rothschild Ward',
+    image: 'images/resuscitaire_top.jpg',
+    imageCaption: 'Daily visual check of resusitaire top surface and equipment',
+    frequency: 'daily',
+    categories: [{
+      name: 'Top Surface Check', icon: '👶',
+      items: [
+        { id: 'res_power_on', name: 'Resusitaire powers on correctly', desc: 'Power on and heating element functional', critical: true },
+        { id: 'res_light_working', name: 'Overhead light working', desc: 'Examination light functional', critical: true },
+        { id: 'res_o2_connected', name: 'Oxygen connected and flow confirmed', desc: 'O2 supply connected, check flow meter', critical: true, image: 'images/res_o2.jpg' },
+        { id: 'res_mask_present', name: 'Masks present (size 0 and 1)', desc: 'Both mask sizes present and in packaging', critical: true, image: 'images/res_mask_1.jpg' },
+        { id: 'res_suction_working', name: 'Suction working', desc: 'Suction functional, tubing present', critical: true, image: 'images/res_suction.jpg' },
+        { id: 'res_towels_present', name: 'Towels present', desc: 'Adequate supply of dry towels on resusitaire', critical: false, image: 'images/res_towels.jpg' },
+        { id: 'res_sats_probe', name: 'Sats probe present', desc: 'Neonatal sats probe present and connected', critical: true, image: 'images/res_sats_probe.jpg' },
+      ]
+    }]
+  },
+
+  clean_resusitaire_rothschild: {
+    name: 'Resusitaire — Weekly Clean',
+    location: 'Rothschild Ward',
+    image: 'images/resuscitaire_cleaning.jpg',
+    imageCaption: 'Full weekly clean of resusitaire — use Tristel or approved disinfectant',
+    frequency: 'weekly',
+    categories: [{
+      name: 'Weekly Clean', icon: '🧹',
+      items: [
+        { id: 'res_clean_surface', name: 'All surfaces cleaned with approved disinfectant', desc: 'Wipe down entire resusitaire using Tristel or approved product', critical: true, image: 'images/resuscitaire_cleaning.jpg' },
+        { id: 'res_clean_mattress', name: 'Mattress cleaned and inspected', desc: 'Clean mattress, check for damage or tears', critical: true, image: 'images/res_mattress.jpg' },
+        { id: 'res_clean_tubing', name: 'Oxygen and suction tubing checked', desc: 'Inspect tubing for damage, replace if needed', critical: true },
+        { id: 'res_clean_signed', name: 'Cleaning record signed and dated', desc: 'Sign the ward cleaning record', critical: true },
+      ]
+    }]
+  },
+
+  room_check_sr3: { name: 'Side Room 3 — O2 & Suction', location: 'Side Room 3', image: 'images/room_o2.jpg', imageCaption: 'Daily check of oxygen and suction', frequency: 'daily', categories: [{ name: 'Oxygen & Suction', icon: '🫁', items: [{ id: 'sr3_o2_connected', name: 'Oxygen connected and functional', critical: true, image: 'images/room_o2.jpg' }, { id: 'sr3_o2_mask', name: 'O2 mask present', critical: true, image: 'images/room_o2_mask.jpg' }, { id: 'sr3_suction_working', name: 'Suction working', critical: true, image: 'images/room_suction.jpg' }, { id: 'sr3_yankauer_present', name: 'Yankauer present', critical: true, image: 'images/room_yankauer.jpg' }] }] },
+  room_check_sr4: { name: 'Side Room 4 — O2 & Suction', location: 'Side Room 4', image: 'images/room_o2.jpg', imageCaption: 'Daily check of oxygen and suction', frequency: 'daily', categories: [{ name: 'Oxygen & Suction', icon: '🫁', items: [{ id: 'sr4_o2_connected', name: 'Oxygen connected and functional', critical: true, image: 'images/room_o2.jpg' }, { id: 'sr4_o2_mask', name: 'O2 mask present', critical: true }, { id: 'sr4_suction_working', name: 'Suction working', critical: true }, { id: 'sr4_yankauer_present', name: 'Yankauer present', critical: true }] }] },
+  room_check_sr5: { name: 'Side Room 5 — O2 & Suction', location: 'Side Room 5', image: 'images/room_o2.jpg', imageCaption: 'Daily check of oxygen and suction', frequency: 'daily', categories: [{ name: 'Oxygen & Suction', icon: '🫁', items: [{ id: 'sr5_o2_connected', name: 'Oxygen connected and functional', critical: true, image: 'images/room_o2.jpg' }, { id: 'sr5_o2_mask', name: 'O2 mask present', critical: true }, { id: 'sr5_suction_working', name: 'Suction working', critical: true }, { id: 'sr5_yankauer_present', name: 'Yankauer present', critical: true }] }] },
+  room_check_sr15: { name: 'Side Room 15 — O2 & Suction', location: 'Side Room 15', image: 'images/room_o2.jpg', imageCaption: 'Daily check of oxygen and suction', frequency: 'daily', categories: [{ name: 'Oxygen & Suction', icon: '🫁', items: [{ id: 'sr15_o2_connected', name: 'Oxygen connected and functional', critical: true }, { id: 'sr15_o2_mask', name: 'O2 mask present', critical: true }, { id: 'sr15_suction_working', name: 'Suction working', critical: true }, { id: 'sr15_yankauer_present', name: 'Yankauer present', critical: true }] }] },
+  room_check_rothschild_suite: { name: 'Rothschild Suite — O2 & Suction', location: 'Rothschild Suite', image: 'images/room_o2.jpg', imageCaption: 'Daily check of oxygen and suction', frequency: 'daily', categories: [{ name: 'Oxygen & Suction', icon: '🫁', items: [{ id: 'rsuite_o2_connected', name: 'Oxygen connected and functional', critical: true }, { id: 'rsuite_o2_mask', name: 'O2 mask present', critical: true }, { id: 'rsuite_suction_working', name: 'Suction working', critical: true }, { id: 'rsuite_yankauer_present', name: 'Yankauer present', critical: true }] }] },
+  room_check_verney_suite: { name: 'Verney Suite — O2 & Suction', location: 'Verney Suite', image: 'images/room_o2.jpg', imageCaption: 'Daily check of oxygen and suction', frequency: 'daily', categories: [{ name: 'Oxygen & Suction', icon: '🫁', items: [{ id: 'vsuite_o2_connected', name: 'Oxygen connected and functional', critical: true }, { id: 'vsuite_o2_mask', name: 'O2 mask present', critical: true }, { id: 'vsuite_suction_working', name: 'Suction working', critical: true }, { id: 'vsuite_yankauer_present', name: 'Yankauer present', critical: true }] }] },
+
+  room_check_bay4:  { name: 'Bay 4 — O2 & Suction',  location: 'Bay 4',  image: 'images/room_o2.jpg', frequency: 'daily', categories: [{ name: 'Bay 4', icon: '🛏', items: [{ id: 'bay4_o2', name: 'Oxygen connected and functional', critical: true }, { id: 'bay4_o2_mask', name: 'O2 mask present', critical: true }, { id: 'bay4_suction', name: 'Suction working', critical: true }, { id: 'bay4_yankauer', name: 'Yankauer present', critical: true }] }] },
+  room_check_bay5:  { name: 'Bay 5 — O2 & Suction',  location: 'Bay 5',  image: 'images/room_o2.jpg', frequency: 'daily', categories: [{ name: 'Bay 5', icon: '🛏', items: [{ id: 'bay5_o2', name: 'Oxygen connected and functional', critical: true }, { id: 'bay5_o2_mask', name: 'O2 mask present', critical: true }, { id: 'bay5_suction', name: 'Suction working', critical: true }, { id: 'bay5_yankauer', name: 'Yankauer present', critical: true }] }] },
+  room_check_bay6:  { name: 'Bay 6 — O2 & Suction',  location: 'Bay 6',  image: 'images/room_o2.jpg', frequency: 'daily', categories: [{ name: 'Bay 6', icon: '🛏', items: [{ id: 'bay6_o2', name: 'Oxygen connected and functional', critical: true }, { id: 'bay6_o2_mask', name: 'O2 mask present', critical: true }, { id: 'bay6_suction', name: 'Suction working', critical: true }, { id: 'bay6_yankauer', name: 'Yankauer present', critical: true }] }] },
+  room_check_bay7:  { name: 'Bay 7 — O2 & Suction',  location: 'Bay 7',  image: 'images/room_o2.jpg', frequency: 'daily', categories: [{ name: 'Bay 7', icon: '🛏', items: [{ id: 'bay7_o2', name: 'Oxygen connected and functional', critical: true }, { id: 'bay7_o2_mask', name: 'O2 mask present', critical: true }, { id: 'bay7_suction', name: 'Suction working', critical: true }, { id: 'bay7_yankauer', name: 'Yankauer present', critical: true }] }] },
+  room_check_bay8:  { name: 'Bay 8 — O2 & Suction',  location: 'Bay 8',  image: 'images/room_o2.jpg', frequency: 'daily', categories: [{ name: 'Bay 8', icon: '🛏', items: [{ id: 'bay8_o2', name: 'Oxygen connected and functional', critical: true }, { id: 'bay8_o2_mask', name: 'O2 mask present', critical: true }, { id: 'bay8_suction', name: 'Suction working', critical: true }, { id: 'bay8_yankauer', name: 'Yankauer present', critical: true }] }] },
+  room_check_bay9:  { name: 'Bay 9 — O2 & Suction',  location: 'Bay 9',  image: 'images/room_o2.jpg', frequency: 'daily', categories: [{ name: 'Bay 9', icon: '🛏', items: [{ id: 'bay9_o2', name: 'Oxygen connected and functional', critical: true }, { id: 'bay9_o2_mask', name: 'O2 mask present', critical: true }, { id: 'bay9_suction', name: 'Suction working', critical: true }, { id: 'bay9_yankauer', name: 'Yankauer present', critical: true }] }] },
+  room_check_bay10: { name: 'Bay 10 — O2 & Suction', location: 'Bay 10', image: 'images/room_o2.jpg', frequency: 'daily', categories: [{ name: 'Bay 10', icon: '🛏', items: [{ id: 'bay10_o2', name: 'Oxygen connected and functional', critical: true }, { id: 'bay10_o2_mask', name: 'O2 mask present', critical: true }, { id: 'bay10_suction', name: 'Suction working', critical: true }, { id: 'bay10_yankauer', name: 'Yankauer present', critical: true }] }] },
+  room_check_bay11: { name: 'Bay 11 — O2 & Suction', location: 'Bay 11', image: 'images/room_o2.jpg', frequency: 'daily', categories: [{ name: 'Bay 11', icon: '🛏', items: [{ id: 'bay11_o2', name: 'Oxygen connected and functional', critical: true }, { id: 'bay11_o2_mask', name: 'O2 mask present', critical: true }, { id: 'bay11_suction', name: 'Suction working', critical: true }, { id: 'bay11_yankauer', name: 'Yankauer present', critical: true }] }] },
+  room_check_bay12: { name: 'Bay 12 — O2 & Suction', location: 'Bay 12', image: 'images/room_o2.jpg', frequency: 'daily', categories: [{ name: 'Bay 12', icon: '🛏', items: [{ id: 'bay12_o2', name: 'Oxygen connected and functional', critical: true }, { id: 'bay12_o2_mask', name: 'O2 mask present', critical: true }, { id: 'bay12_suction', name: 'Suction working', critical: true }, { id: 'bay12_yankauer', name: 'Yankauer present', critical: true }] }] },
+
+  cpr_trolley_daily: {
+    name: 'CPR Trolley — Daily Sign-off',
+    location: 'Rothschild Ward',
+    image: 'images/cpr_trolley.jpg',
+    imageCaption: 'Confirm paper checklist is signed and dated before submitting',
+    frequency: 'daily',
+    afterEmergency: true,
+    categories: [{ name: 'Daily Paper Check', icon: '📋', items: [
+      { id: 'cpr_paper_signed', name: 'Paper checklist signed and dated', desc: 'Physical paper checklist on trolley is signed and dated', critical: true, image: 'images/cpr_paper_checklist.jpg' },
+      { id: 'cpr_trolley_present', name: 'Trolley present in correct location', desc: 'CPR trolley is in its designated position and accessible', critical: true, image: 'images/cpr_trolley_location.jpg' },
+      { id: 'cpr_seal_intact', name: 'Seal intact (if applicable)', desc: 'Confirm tamper seal has not been broken since last check', critical: false, image: 'images/cpr_seal.jpg' },
+    ]}]
+  },
+
+  cpr_trolley_weekly: {
+    name: 'CPR Trolley — Weekly Full Check',
+    location: 'Rothschild Ward',
+    image: 'images/cpr_trolley.jpg',
+    imageCaption: 'Full 7-day contents check — check all items against resus department paper list',
+    frequency: 'weekly',
+    afterEmergency: true,
+    categories: [{ name: 'Full Contents Check', icon: '✅', items: [
+      { id: 'cpr_full_contents', name: 'All contents present and checked', desc: 'Check all items against the resus department paper checklist', critical: true },
+      { id: 'cpr_full_signed', name: 'Paper checklist signed and dated', critical: true, image: 'images/cpr_paper_checklist.jpg' },
+      { id: 'cpr_expiry_checked', name: 'Expiry dates checked on all applicable items', desc: 'Replace anything expiring within 30 days', critical: true },
+      { id: 'cpr_resealed', name: 'Trolley resealed with new seal', desc: 'New tamper seal applied and number recorded', critical: true, image: 'images/cpr_seal.jpg' },
+    ]}]
+  },
+
+  clean_cpr_trolley: {
+    name: 'CPR Trolley — Weekly Clean',
+    location: 'Rothschild Ward',
+    image: 'images/cpr_trolley.jpg',
+    imageCaption: 'Weekly clean of CPR trolley exterior and accessible surfaces',
+    frequency: 'weekly',
+    categories: [{ name: 'Weekly Clean', icon: '🧹', items: [
+      { id: 'cpr_clean_surfaces', name: 'All external surfaces cleaned', desc: 'Wipe down trolley with approved disinfectant', critical: true },
+      { id: 'cpr_clean_signed', name: 'Cleaning record signed and dated', critical: true },
+    ]}]
+  },
+
+  tcb_machine_1: {
+    name: 'TCB Machine 1 — Daily Calibration',
+    location: 'Nursery',
+    image: 'images/glucose_monitor.jpg',
+    imageCaption: 'Run all 3 control levels. L: −2.8 to −0.8 | S: −2.4 to −0.4 | △: −0.9 to +0.1',
+    frequency: 'daily',
+    categories: [
+      { name: 'Level L (range: −2.8 to −0.8)', icon: '🔬', items: [
+        { id: 'tcb1_L_run', name: 'Level L control run', critical: true },
+        { id: 'tcb1_L_range', name: 'Level L result within range (−2.8 to −0.8)', desc: 'Result must be ≥ −2.8 and ≤ −0.8', critical: true },
+      ]},
+      { name: 'Level S (range: −2.4 to −0.4)', icon: '🔬', items: [
+        { id: 'tcb1_S_run', name: 'Level S control run', critical: true },
+        { id: 'tcb1_S_range', name: 'Level S result within range (−2.4 to −0.4)', desc: 'Result must be ≥ −2.4 and ≤ −0.4', critical: true },
+      ]},
+      { name: 'Level △ (range: −0.9 to +0.1)', icon: '🔬', items: [
+        { id: 'tcb1_D_run', name: 'Level △ control run', critical: true },
+        { id: 'tcb1_D_range', name: 'Level △ result within range (−0.9 to +0.1)', desc: 'Result must be ≥ −0.9 and ≤ +0.1', critical: true },
+      ]},
+      { name: 'Documentation', icon: '📋', items: [
+        { id: 'tcb1_results_recorded', name: 'All results recorded in machine log', critical: true },
+        { id: 'tcb1_strips_expiry', name: 'Consumables in date', desc: 'Check expiry on all control solutions', critical: true, image: 'images/gm_strips_expiry.jpg' },
+      ]}
+    ]
+  },
+
+  tcb_machine_2: {
+    name: 'TCB Machine 2 — Daily Calibration',
+    location: 'Nursery',
+    image: 'images/glucose_monitor.jpg',
+    imageCaption: 'Run all 3 control levels. L: −2.8 to −0.8 | S: −2.4 to −0.4 | △: −0.9 to +0.1',
+    frequency: 'daily',
+    categories: [
+      { name: 'Level L (range: −2.8 to −0.8)', icon: '🔬', items: [
+        { id: 'tcb2_L_run', name: 'Level L control run', critical: true },
+        { id: 'tcb2_L_range', name: 'Level L result within range (−2.8 to −0.8)', critical: true },
+      ]},
+      { name: 'Level S (range: −2.4 to −0.4)', icon: '🔬', items: [
+        { id: 'tcb2_S_run', name: 'Level S control run', critical: true },
+        { id: 'tcb2_S_range', name: 'Level S result within range (−2.4 to −0.4)', critical: true },
+      ]},
+      { name: 'Level △ (range: −0.9 to +0.1)', icon: '🔬', items: [
+        { id: 'tcb2_D_run', name: 'Level △ control run', critical: true },
+        { id: 'tcb2_D_range', name: 'Level △ result within range (−0.9 to +0.1)', critical: true },
+      ]},
+      { name: 'Documentation', icon: '📋', items: [
+        { id: 'tcb2_results_recorded', name: 'All results recorded in machine log', critical: true },
+        { id: 'tcb2_strips_expiry', name: 'Consumables in date', critical: true, image: 'images/gm_strips_expiry.jpg' },
+      ]}
+    ]
+  },
+
+  glucose_monitor_nursery: {
+    name: 'Glucose Monitor — Daily Calibration',
+    location: 'Nursery',
+    image: 'images/glucose_monitor.jpg',
+    imageCaption: 'Run high and low controls and record results',
+    frequency: 'daily',
+    categories: [{ name: 'Control Checks', icon: '🩸', items: [
+      { id: 'gm_low_run', name: 'Low control run and in range', critical: true, image: 'images/gm_control_low.jpg' },
+      { id: 'gm_high_run', name: 'High control run and in range', critical: true, image: 'images/gm_control_high.jpg' },
+      { id: 'gm_strips_expiry', name: 'Test strips in date', critical: true, image: 'images/gm_strips_expiry.jpg' },
+      { id: 'gm_lancets_present', name: 'Lancets present and in date', critical: false, image: 'images/gm_lancets.jpg' },
+      { id: 'gm_results_recorded', name: 'Results recorded in logbook', critical: true },
+    ]}]
+  },
+
+  sbr_machine: {
+    name: 'SBR Machine — Daily Check',
+    location: 'Nursery',
+    image: 'images/glucose_monitor.jpg',
+    imageCaption: 'Run control check. Acceptable range: 329–379.',
+    frequency: 'daily',
+    categories: [{ name: 'SBR Control Check — Range: 329–379', icon: '🧪', items: [
+      { id: 'sbr_control_run', name: 'Control run completed', critical: true },
+      { id: 'sbr_in_range', name: 'Result within acceptable range (329–379)', desc: 'Control result must be between 329 and 379', critical: true },
+      { id: 'sbr_result_recorded', name: 'Result recorded in logbook', critical: true },
+      { id: 'sbr_consumables_date', name: 'Consumables in date', critical: true },
+    ]}]
+  },
+
+  washer_rothschild: {
+    name: 'Instrument Washer — Daily Check',
+    location: 'Rothschild Ward',
+    image: 'images/instrument_washer.jpg',
+    imageCaption: 'Daily check of instrument washer — confirm cycle completed correctly',
+    frequency: 'daily',
+    categories: [{ name: 'Washer Check', icon: '🫧', items: [
+      { id: 'washer_cycle_complete', name: 'Cycle completed successfully', desc: 'Confirm last cycle completed without error', critical: true, image: 'images/instrument_washer.jpg' },
+      { id: 'washer_chamber_clean', name: 'Chamber clean — no debris', critical: true, image: 'images/washer_chamber.jpg' },
+      { id: 'washer_chemicals_present', name: 'Chemicals/detergent present', desc: 'Check detergent and rinse aid levels', critical: true },
+      { id: 'washer_log_signed', name: 'Washer log signed', critical: true },
+    ]}]
+  },
+
+  fridge_milk:            { name: 'Milk Fridge — Temperature', location: 'Milk Kitchen', image: 'images/fridge_escalation_flowchart.jpg', imageCaption: 'Acceptable range 2–8°C — escalate if outside range', frequency: 'daily', temperatureCheck: true, categories: [{ name: 'Temperature 2–8°C', icon: '🌡', items: [{ id: 'milkfridge_temp_ok', name: 'Temperature within range (2–8°C)', critical: true, image: 'images/fridge_escalation_flowchart.jpg' }, { id: 'milkfridge_log_signed', name: 'Temperature logged and signed', critical: true }] }] },
+  freezer_milk:           { name: 'Milk Freezer — Temperature', location: 'Milk Kitchen', image: 'images/fridge_escalation_flowchart.jpg', imageCaption: 'Acceptable range −25°C to −15°C', frequency: 'daily', temperatureCheck: true, categories: [{ name: 'Temperature −25°C to −15°C', icon: '❄', items: [{ id: 'milkfreezer_temp_ok', name: 'Temperature within range (−25°C to −15°C)', critical: true }, { id: 'milkfreezer_log_signed', name: 'Temperature logged and signed', critical: true }] }] },
+  freezer_drug:           { name: 'Drug Freezer — Temperature', location: 'Rothschild Ward', image: 'images/fridge_escalation_flowchart.jpg', imageCaption: 'Acceptable range −25°C to −15°C', frequency: 'daily', temperatureCheck: true, categories: [{ name: 'Temperature −25°C to −15°C', icon: '❄', items: [{ id: 'drugfreezer_temp_ok', name: 'Temperature within range (−25°C to −15°C)', critical: true }, { id: 'drugfreezer_log_signed', name: 'Temperature logged and signed', critical: true }] }] },
+  fridge_antenatal_drug:  { name: 'Antenatal Drug Fridge — Temperature', location: 'Antenatal Ward', image: 'images/fridge_escalation_flowchart.jpg', imageCaption: 'Acceptable range 2–8°C — pharmacy 01494 425355', frequency: 'daily', temperatureCheck: true, categories: [{ name: 'Temperature 2–8°C', icon: '💊', items: [{ id: 'antefridge_temp_ok', name: 'Temperature within range (2–8°C)', critical: true, image: 'images/fridge_escalation_flowchart.jpg' }, { id: 'antefridge_log_signed', name: 'Temperature logged and signed', critical: true }] }] },
+  fridge_postnatal_drug:  { name: 'Postnatal Drug Fridge — Temperature', location: 'Postnatal Ward', image: 'images/fridge_escalation_flowchart.jpg', imageCaption: 'Acceptable range 2–8°C — pharmacy 01494 425355', frequency: 'daily', temperatureCheck: true, categories: [{ name: 'Temperature 2–8°C', icon: '💊', items: [{ id: 'postfridge_temp_ok', name: 'Temperature within range (2–8°C)', critical: true, image: 'images/fridge_escalation_flowchart.jpg' }, { id: 'postfridge_log_signed', name: 'Temperature logged and signed', critical: true }] }] },
+  fridge_staff:           { name: 'Staff Fridge — Temperature', location: 'Staff Area', image: 'images/fridge_escalation_flowchart.jpg', imageCaption: 'Acceptable range 2–8°C', frequency: 'daily', temperatureCheck: true, categories: [{ name: 'Temperature 2–8°C', icon: '🥪', items: [{ id: 'stafffridge_temp_ok', name: 'Temperature within range (2–8°C)', critical: true }, { id: 'stafffridge_log_signed', name: 'Temperature logged and signed', critical: true }] }] },
+
+  temp_drug_prep_am:      { name: 'Drug Prep Area — Temperature (AM)', location: 'Drug Prep Area', image: 'images/temp_chart.jpg', imageCaption: 'Maximum 25°C — escalate if exceeded', frequency: 'daily', temperatureCheck: true, categories: [{ name: 'Morning Check — max 25°C', icon: '🌡', items: [{ id: 'drugprep_am_temp_ok', name: 'Temperature at or below 25°C', critical: true, image: 'images/temp_chart.jpg' }, { id: 'drugprep_am_recorded', name: 'Temperature recorded and signed', critical: true }] }] },
+  temp_drug_prep_pm:      { name: 'Drug Prep Area — Temperature (PM)', location: 'Drug Prep Area', image: 'images/temp_chart.jpg', imageCaption: 'Maximum 25°C — escalate if exceeded', frequency: 'daily', temperatureCheck: true, categories: [{ name: 'Evening Check — max 25°C', icon: '🌡', items: [{ id: 'drugprep_pm_temp_ok', name: 'Temperature at or below 25°C', critical: true }, { id: 'drugprep_pm_recorded', name: 'Temperature recorded and signed', critical: true }] }] },
+  temp_milk_kitchen_am:   { name: 'Milk Kitchen — Temperature (AM)', location: 'Milk Kitchen', image: 'images/temp_chart.jpg', imageCaption: 'Maximum 25°C', frequency: 'daily', temperatureCheck: true, categories: [{ name: 'Morning Check — max 25°C', icon: '🌡', items: [{ id: 'milkkitch_am_temp_ok', name: 'Temperature at or below 25°C', critical: true }, { id: 'milkkitch_am_recorded', name: 'Temperature recorded and signed', critical: true }] }] },
+  temp_milk_kitchen_pm:   { name: 'Milk Kitchen — Temperature (PM)', location: 'Milk Kitchen', image: 'images/temp_chart.jpg', imageCaption: 'Maximum 25°C', frequency: 'daily', temperatureCheck: true, categories: [{ name: 'Evening Check — max 25°C', icon: '🌡', items: [{ id: 'milkkitch_pm_temp_ok', name: 'Temperature at or below 25°C', critical: true }, { id: 'milkkitch_pm_recorded', name: 'Temperature recorded and signed', critical: true }] }] },
+  temp_antenatal_ward_am: { name: 'Antenatal Ward — Temperature (AM)', location: 'Antenatal Ward', image: 'images/temp_chart.jpg', imageCaption: 'Maximum 25°C', frequency: 'daily', temperatureCheck: true, categories: [{ name: 'Morning Check — max 25°C', icon: '🌡', items: [{ id: 'antewrd_am_temp_ok', name: 'Temperature at or below 25°C', critical: true }, { id: 'antewrd_am_recorded', name: 'Temperature recorded and signed', critical: true }] }] },
+  temp_antenatal_ward_pm: { name: 'Antenatal Ward — Temperature (PM)', location: 'Antenatal Ward', image: 'images/temp_chart.jpg', imageCaption: 'Maximum 25°C', frequency: 'daily', temperatureCheck: true, categories: [{ name: 'Evening Check — max 25°C', icon: '🌡', items: [{ id: 'antewrd_pm_temp_ok', name: 'Temperature at or below 25°C', critical: true }, { id: 'antewrd_pm_recorded', name: 'Temperature recorded and signed', critical: true }] }] },
+  temp_postnatal_ward_am: { name: 'Postnatal Ward — Temperature (AM)', location: 'Postnatal Ward', image: 'images/temp_chart.jpg', imageCaption: 'Maximum 25°C', frequency: 'daily', temperatureCheck: true, categories: [{ name: 'Morning Check — max 25°C', icon: '🌡', items: [{ id: 'postwrd_am_temp_ok', name: 'Temperature at or below 25°C', critical: true }, { id: 'postwrd_am_recorded', name: 'Temperature recorded and signed', critical: true }] }] },
+  temp_postnatal_ward_pm: { name: 'Postnatal Ward — Temperature (PM)', location: 'Postnatal Ward', image: 'images/temp_chart.jpg', imageCaption: 'Maximum 25°C', frequency: 'daily', temperatureCheck: true, categories: [{ name: 'Evening Check — max 25°C', icon: '🌡', items: [{ id: 'postwrd_pm_temp_ok', name: 'Temperature at or below 25°C', critical: true }, { id: 'postwrd_pm_recorded', name: 'Temperature recorded and signed', critical: true }] }] },
+
+  clean_uss_1: { name: 'USS Machine 1 — Weekly Clean', location: 'Rothschild Ward', image: 'images/uss_machine.jpg', imageCaption: 'Weekly clean with approved disinfectant', frequency: 'weekly', categories: [{ name: 'Weekly Clean', icon: '🧹', items: [{ id: 'uss1_clean_probe', name: 'Probe cleaned with approved solution', critical: true, image: 'images/tristel_bottle.jpg' }, { id: 'uss1_clean_machine', name: 'Machine exterior cleaned', critical: true }, { id: 'uss1_clean_signed', name: 'Cleaning record signed and dated', critical: true }] }] },
+  clean_uss_2: { name: 'USS Machine 2 — Weekly Clean', location: 'Rothschild Ward', image: 'images/uss_machine.jpg', imageCaption: 'Weekly clean with approved disinfectant', frequency: 'weekly', categories: [{ name: 'Weekly Clean', icon: '🧹', items: [{ id: 'uss2_clean_probe', name: 'Probe cleaned with approved solution', critical: true, image: 'images/tristel_bottle.jpg' }, { id: 'uss2_clean_machine', name: 'Machine exterior cleaned', critical: true }, { id: 'uss2_clean_signed', name: 'Cleaning record signed and dated', critical: true }] }] },
+};
+
+// ============================================================
+//  APP STATE
+// ============================================================
+let currentEquip = null;
+let currentEqId = null;
+let answers = {};
+let failNotes = {};
+let tempValues = {};
+let staffName = '';
+let isEmergencyCheck = false;
+
+// ============================================================
+//  INIT
+// ============================================================
+function init() {
+  updateTime();
+  setInterval(updateTime, 30000);
+  if (CONFIG.supabaseUrl === 'YOUR_SUPABASE_URL') {
+    document.getElementById('configNotice').style.display = 'block';
+  }
+  const params = new URLSearchParams(window.location.search);
+  currentEqId = params.get('eq');
+  if (!currentEqId || !EQUIPMENT_DB[currentEqId]) {
+    document.getElementById('heroName').textContent = 'Equipment not found';
+    document.getElementById('heroLocation').textContent = 'Check QR code and try again';
+    return;
+  }
+  currentEquip = EQUIPMENT_DB[currentEqId];
+  renderHero();
+  loadLastCheck(currentEqId);
+  document.getElementById('staffName').addEventListener('input', checkCanStart);
+}
+
+function updateTime() {
+  const now = new Date();
+  document.getElementById('topTime').innerHTML =
+    now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}) + '<br>' +
+    now.toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+}
+
+function renderHero() {
+  const eq = currentEquip;
+  const imgWrap = document.getElementById('heroImgWrap');
+  if (eq.image) {
+    imgWrap.innerHTML = `<img src="${eq.image}" alt="${eq.name}" onerror="this.parentElement.innerHTML='<div class=equip-hero-placeholder><div>🏥</div><p>Photo coming soon</p></div>'">`;
+  }
+  document.getElementById('heroName').textContent = eq.name;
+  document.getElementById('heroLocation').textContent = eq.location;
+  const freqMap = {daily:'Daily',weekly:'Weekly',monthly:'Monthly'};
+  const freqClass = {daily:'fp-daily',weekly:'fp-weekly',monthly:'fp-monthly'};
+  let badges = `<span class="freq-pill ${freqClass[eq.frequency]}">${freqMap[eq.frequency]} check</span>`;
+  if (eq.afterEmergency) badges += `<span class="freq-pill fp-emergency">Also after emergency use</span>`;
+  document.getElementById('heroBadges').innerHTML = badges;
+}
+
+async function loadLastCheck(eqId) {
+  if (CONFIG.supabaseUrl === 'YOUR_SUPABASE_URL') return;
+  try {
+    const res = await fetch(`${CONFIG.supabaseUrl}/rest/v1/equipment_checks?equipment_id=eq.${eqId}&order=checked_at.desc&limit=1`, {
+      headers:{'apikey':CONFIG.supabaseKey,'Authorization':`Bearer ${CONFIG.supabaseKey}`}
+    });
+    const data = await res.json();
+    if (data && data.length > 0) {
+      const last = data[0];
+      const t = new Date(last.checked_at);
+      document.getElementById('lastCheckText').textContent =
+        `${t.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'})} at ${t.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})} by ${last.staff_name} — ${last.overall_status === 'pass' ? '✓ Passed' : '⚠ Issues recorded'}`;
+      document.getElementById('lastCheckBox').style.display = 'block';
+    }
+  } catch(e) {}
+}
+
+function checkCanStart() {
+  document.getElementById('startBtn').disabled = document.getElementById('staffName').value.trim().length < 1;
+}
+
+function startCheck() {
+  isEmergencyCheck = false;
+  staffName = document.getElementById('staffName').value.trim();
+  answers = {}; failNotes = {}; tempValues = {};
+  buildChecklist();
+  showScreen('screen-check');
+}
+
+// ============================================================
+//  BUILD CHECKLIST
+// ============================================================
+function buildChecklist() {
+  const eq = currentEquip;
+  document.getElementById('checkTitle').textContent = eq.name;
+  document.getElementById('checkSubtitle').textContent = `${staffName} · ${new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}`;
+  if (eq.image) {
+    document.getElementById('mainImg').src = eq.image;
+    document.getElementById('mainCaption').textContent = eq.imageCaption || '';
+    document.getElementById('mainImgSection').style.display = 'block';
+  } else {
+    document.getElementById('mainImgSection').style.display = 'none';
+  }
+
+  let html = '';
+  eq.categories.forEach(cat => {
+    html += `<div class="cat-header"><div class="cat-icon">${cat.icon}</div>${cat.name}</div>`;
+    cat.items.forEach(item => {
+      const hasImg = item.image;
+      const imgHtml = hasImg
+        ? `<div class="item-img-thumb" onclick="openLightbox('${item.image}','${(item.name||'').replace(/'/g,"\\'")}')"><img src="${item.image}" alt="${item.name||''}" onerror="this.parentElement.innerHTML='<div class=item-img-placeholder>📷</div>'"><div class="item-img-expand">🔍</div></div>`
+        : `<div class="item-img-thumb"><div class="item-img-placeholder">📷</div></div>`;
+      html += `
+        <div class="item-wrap${item.critical?' critical':''}" id="wrap-${item.id}">
+          <div class="item-row">
+            ${imgHtml}
+            <div class="item-text">
+              <div class="item-name">${item.name}${item.critical?'<span class="critical-tag">Critical</span>':''}</div>
+              ${item.desc?`<div class="item-desc">${item.desc}</div>`:''}
+            </div>
+            <div class="ans-wrap">
+              <button class="ans-btn a-pass" id="pass-${item.id}" onclick="setAns('${item.id}','pass')">✓ Pass</button>
+              <button class="ans-btn a-fail" id="fail-${item.id}" onclick="setAns('${item.id}','fail')">✗ Fail</button>
+              <button class="ans-btn a-na" id="na-${item.id}" onclick="setAns('${item.id}','na')">N/A</button>
+            </div>
+          </div>
+          <div class="fail-note" id="fnote-${item.id}" style="display:none;">
+            <div class="fail-note-label">⚠ Describe the fault (required before submitting):</div>
+            <textarea class="fail-note-input" id="fnotetxt-${item.id}" placeholder="Describe what was found and any action taken..." oninput="updateSubmit()"></textarea>
+          </div>
+        </div>`;
+    });
+  });
+
+  document.getElementById('checksBody').innerHTML = html;
+  updateProgress();
+}
+
+function setAns(itemId, ans) {
+  answers[itemId] = ans;
+  ['pass','fail','na'].forEach(a => {
+    const el = document.getElementById(`${a}-${itemId}`);
+    if(el) el.classList.toggle('active', a === ans);
+  });
+  const fnote = document.getElementById(`fnote-${itemId}`);
+  if(fnote) fnote.style.display = ans === 'fail' ? 'block' : 'none';
+  if(ans !== 'fail') delete failNotes[itemId];
+  updateProgress();
+  updateSubmit();
+}
+
+function getAllItems() {
+  const items = [];
+  currentEquip.categories.forEach(c => c.items.forEach(i => items.push(i)));
+  return items;
+}
+
+function updateProgress() {
+  const items = getAllItems();
+  const done = items.filter(i => answers[i.id]).length;
+  const pct = items.length ? Math.round(done/items.length*100) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = `${done} of ${items.length} answered`;
+}
+
+function updateSubmit() {
+  const items = getAllItems();
+  const allAnswered = items.every(i => answers[i.id]);
+  const failsMissingNotes = items.filter(i => answers[i.id]==='fail').some(i => {
+    const el = document.getElementById(`fnotetxt-${i.id}`);
+    return el && !el.value.trim();
+  });
+  const canSubmit = allAnswered && !failsMissingNotes;
+  document.getElementById('submitBtn').disabled = !canSubmit;
+  if (!allAnswered) document.getElementById('submitNote').textContent = 'Answer all items to submit';
+  else if (failsMissingNotes) document.getElementById('submitNote').textContent = 'Add fault notes for all failed items';
+  else document.getElementById('submitNote').textContent = 'All items answered — ready to submit';
+}
+
+// ============================================================
+//  SUBMIT
+// ============================================================
+async function submitCheck() {
+  const items = getAllItems();
+  items.forEach(i => {
+    if(answers[i.id]==='fail') {
+      const el = document.getElementById(`fnotetxt-${i.id}`);
+      if(el) failNotes[i.id] = el.value.trim();
+    }
+  });
+
+  const passCount = items.filter(i=>answers[i.id]==='pass').length;
+  const failCount = items.filter(i=>answers[i.id]==='fail').length;
+  const naCount   = items.filter(i=>answers[i.id]==='na').length;
+  const critFails = items.filter(i=>i.critical&&answers[i.id]==='fail').map(i=>i.name);
+  const overall = failCount > 0 ? 'fail' : 'pass';
+
+  const payload = {
+    equipment_id: currentEqId,
+    equipment_name: currentEquip.name,
+    location: currentEquip.location,
+    frequency: currentEquip.frequency,
+    staff_name: staffName,
+    checked_at: new Date().toISOString(),
+    overall_status: overall,
+    pass_count: passCount,
+    fail_count: failCount,
+    na_count: naCount,
+    critical_fails: critFails,
+    answers,
+    fail_notes: failNotes,
+    temperature_values: tempValues,
+    ward: CONFIG.ward
+  };
+
+  document.getElementById('submitBtn').disabled = true;
+  document.getElementById('submitBtn').textContent = 'Submitting...';
+
+  let saved = false;
+  if (CONFIG.supabaseUrl !== 'YOUR_SUPABASE_URL') {
+    try {
+      const res = await fetch(`${CONFIG.supabaseUrl}/rest/v1/equipment_checks`, {
+        method:'POST',
+        headers:{'Content-Type':'application/json','apikey':CONFIG.supabaseKey,'Authorization':`Bearer ${CONFIG.supabaseKey}`,'Prefer':'return=minimal'},
+        body: JSON.stringify(payload)
+      });
+      saved = res.ok;
+    } catch(e) { console.error(e); }
+  }
+
+  // Local backup
+  try {
+    const local = JSON.parse(localStorage.getItem('rw_smh_checks') || '[]');
+    local.unshift({...payload, _savedToCloud: saved});
+    if(local.length > 1000) local.splice(1000);
+    localStorage.setItem('rw_smh_checks', JSON.stringify(local));
+  } catch(e) {}
+
+  showComplete(overall, passCount, failCount, naCount, critFails, saved);
+}
+
+function showComplete(status, pass, fail, na, critFails, saved) {
+  const icon = document.getElementById('completeIcon');
+  icon.className = `complete-icon ${status==='pass'?'ci-pass':'ci-fail'}`;
+  icon.textContent = status==='pass' ? '✓' : '⚠';
+  document.getElementById('completeTitle').textContent = status==='pass' ? 'Check Complete — All Clear' : 'Check Complete — Issues Recorded';
+  document.getElementById('completeMsg').textContent = status==='pass'
+    ? 'All items checked and passed.'
+    : `${fail} item${fail>1?'s':''} failed. Notify the shift lead immediately.`;
+
+  let html = `
+    <div class="summary-row"><span class="sr-label">Equipment</span><span class="sr-val">${currentEquip.name}</span></div>
+    <div class="summary-row"><span class="sr-label">Checked by</span><span class="sr-val">${staffName}</span></div>
+    <div class="summary-row"><span class="sr-label">Time</span><span class="sr-val">${new Date().toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</span></div>
+    <div class="summary-row"><span class="sr-label">Passed</span><span class="sr-val" style="color:var(--green)">${pass}</span></div>`;
+  if(fail>0) html += `<div class="summary-row"><span class="sr-label">Failed</span><span class="sr-val" style="color:var(--red)">${fail}</span></div>`;
+  if(critFails.length>0) html += `<div class="summary-row" style="flex-direction:column;gap:6px;"><span class="sr-label" style="color:var(--red);font-weight:700;">⚠ Critical failures</span><span style="font-size:13px;">${critFails.join(', ')}</span></div>`;
+  html += `<div class="summary-row"><span class="sr-label">Data saved</span><span class="sr-val" style="color:${saved?'var(--green)':'var(--amber)'}"> ${saved?'✓ Cloud + Local':'Local only (offline)'}</span></div>`;
+
+  document.getElementById('completeSummary').innerHTML = html;
+  showScreen('screen-complete');
+}
+
+function resetToStart() {
+  answers={}; failNotes={}; tempValues={}; isEmergencyCheck=false;
+  document.getElementById('staffName').value='';
+  document.getElementById('startBtn').disabled=true;
+  document.getElementById('submitBtn').textContent='Submit Check';
+  showScreen('screen-staff');
+}
+
+function openLightbox(src, caption) {
+  document.getElementById('lightboxImg').src = src;
+  document.getElementById('lightboxCaption').textContent = caption;
+  document.getElementById('lightbox').classList.add('show');
+}
+
+function closeLightbox() { document.getElementById('lightbox').classList.remove('show'); }
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.innerHTML = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+init();
+</script>
+</body>
+</html>
