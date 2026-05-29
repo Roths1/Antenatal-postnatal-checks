@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -117,7 +117,7 @@ tr:hover td{background:var(--grey5);}
 
 <div class="nav">
   <div class="nhs-logo">NHS</div>
-  <div class="nav-centre"><h1>Rothschild Ward</h1><p>Antenatal &amp; Postnatal Equipment Dashboard</p></div>
+  <div class="nav-centre"><h1>Antenatal &amp; Postnatal Ward</h1><p>Equipment &amp; Housekeeping Dashboard</p></div>
   <div class="nav-right"><div class="nav-time" id="navTime"></div><div class="nav-status" id="navStatus">Loading...</div></div>
 </div>
 
@@ -321,7 +321,7 @@ const WASHER_IDS = ['washer_rothschild'];
 
 const FRIDGE_IDS = ['fridge_milk','freezer_milk','freezer_drug','fridge_antenatal_drug','fridge_postnatal_drug','fridge_staff'];
 const FRIDGE_ICONS = { fridge_milk:'🥛', freezer_milk:'❄', freezer_drug:'❄', fridge_antenatal_drug:'💊', fridge_postnatal_drug:'💊', fridge_staff:'🥪' };
-const FRIDGE_RANGE = { fridge_milk:'2–8°C', freezer_milk:'−25°C to −15°C', freezer_drug:'−25°C to −15°C', fridge_antenatal_drug:'2–8°C', fridge_postnatal_drug:'2–8°C', fridge_staff:'2–8°C' };
+const FRIDGE_RANGE = { fridge_milk:'2–8°C', freezer_milk:'−20°C to −15°C', freezer_drug:'−20°C to −15°C', fridge_antenatal_drug:'2–8°C', fridge_postnatal_drug:'2–8°C', fridge_staff:'2–8°C' };
 
 const AREA_TEMP_IDS = ['temp_drug_prep_am','temp_drug_prep_pm','temp_milk_kitchen_am','temp_milk_kitchen_pm','temp_antenatal_ward_am','temp_antenatal_ward_pm','temp_postnatal_ward_am','temp_postnatal_ward_pm'];
 
@@ -365,7 +365,7 @@ function showTab(tab){
 async function loadData(){
   document.getElementById('navStatus').textContent='Loading...';
   try{
-    if(CONFIG.supabaseUrl==='YOUR_SUPABASE_URL'){
+    if(!CONFIG.supabaseUrl || CONFIG.supabaseUrl==='YOUR_SUPABASE_URL'){
       document.getElementById('navStatus').textContent='Setup required';
       allChecks=[];
       renderAll();
@@ -569,7 +569,7 @@ function renderEnvironment(){
     const curr=Object.entries(tv).find(([k])=>k.toLowerCase().includes('current'));
     const currVal=curr?parseFloat(curr[1]):null;
     const isFreeze=id.includes('freezer');
-    const inRange=v=>v!==null&&(isFreeze?(v>=-25&&v<=-15):(v>=2&&v<=8));
+    const inRange=v=>v!==null&&(isFreeze?(v>=-20&&v<=-15):(v>=2&&v<=8));
     const tClass=currVal===null?'temp-none':inRange(currVal)?'temp-ok':'temp-bad';
     return `<div class="fridge-card st-${st}" onclick="openModal('${id}')">
       <div class="fridge-top"><div class="fridge-icon">${FRIDGE_ICONS[id]||'❄'}</div><div class="eq-info"><div class="fridge-name">${meta?meta.name:id}</div><div class="fridge-loc">${meta?meta.location:''}</div></div><span class="pill ${pillClass(st)}">${pillText(st)}</span></div>
@@ -735,4 +735,3 @@ window.onload=init;
 </script>
 </body>
 </html>
-

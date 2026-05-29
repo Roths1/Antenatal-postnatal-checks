@@ -210,8 +210,8 @@ body{font-family:var(--font);background:var(--grey5);color:var(--grey1);min-heig
 //  CONFIG — replace with your Supabase project credentials
 // ============================================================
 const CONFIG = {
-  supabaseUrl: 'YOUR_SUPABASE_URL',
-  supabaseKey: 'YOUR_SUPABASE_ANON_KEY',
+  supabaseUrl: 'https://cmewfvbkiwhbsadaongu.supabase.co',
+  supabaseKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNtZXdmdmJraXdoYnNhZGFvbmd1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwNTYwMTYsImV4cCI6MjA5NTYzMjAxNn0.2YcDyZdtEFgFNbzHP3jxtOuPGZCk6rUIyTYG_59K0eg',
   ward: 'Rothschild Ward Stoke Mandeville'
 };
 
@@ -445,8 +445,8 @@ const EQUIPMENT_DB = {
   },
 
   fridge_milk:            { name: 'Milk Fridge — Temperature', location: 'Milk Kitchen', image: 'images/fridge_escalation_flowchart.jpg', imageCaption: 'Acceptable range 2–8°C — escalate if outside range', frequency: 'daily', temperatureCheck: true, categories: [{ name: 'Temperature 2–8°C', icon: '🌡', items: [{ id: 'milkfridge_temp_ok', name: 'Temperature within range (2–8°C)', critical: true, image: 'images/fridge_escalation_flowchart.jpg' }, { id: 'milkfridge_log_signed', name: 'Temperature logged and signed', critical: true }] }] },
-  freezer_milk:           { name: 'Milk Freezer — Temperature', location: 'Milk Kitchen', image: 'images/fridge_escalation_flowchart.jpg', imageCaption: 'Acceptable range −25°C to −15°C', frequency: 'daily', temperatureCheck: true, categories: [{ name: 'Temperature −25°C to −15°C', icon: '❄', items: [{ id: 'milkfreezer_temp_ok', name: 'Temperature within range (−25°C to −15°C)', critical: true }, { id: 'milkfreezer_log_signed', name: 'Temperature logged and signed', critical: true }] }] },
-  freezer_drug:           { name: 'Drug Freezer — Temperature', location: 'Rothschild Ward', image: 'images/fridge_escalation_flowchart.jpg', imageCaption: 'Acceptable range −25°C to −15°C', frequency: 'daily', temperatureCheck: true, categories: [{ name: 'Temperature −25°C to −15°C', icon: '❄', items: [{ id: 'drugfreezer_temp_ok', name: 'Temperature within range (−25°C to −15°C)', critical: true }, { id: 'drugfreezer_log_signed', name: 'Temperature logged and signed', critical: true }] }] },
+  freezer_milk:           { name: 'Milk Freezer — Temperature', location: 'Milk Kitchen', image: 'images/fridge_escalation_flowchart.jpg', imageCaption: 'Acceptable range −20°C to −15°C', frequency: 'daily', temperatureCheck: true, categories: [{ name: 'Temperature −20°C to −15°C', icon: '❄', items: [{ id: 'milkfreezer_temp_ok', name: 'Temperature within range (−20°C to −15°C)', critical: true }, { id: 'milkfreezer_log_signed', name: 'Temperature logged and signed', critical: true }] }] },
+  freezer_drug:           { name: 'Drug Freezer — Temperature', location: 'Rothschild Ward', image: 'images/fridge_escalation_flowchart.jpg', imageCaption: 'Acceptable range −20°C to −15°C', frequency: 'daily', temperatureCheck: true, categories: [{ name: 'Temperature −20°C to −15°C', icon: '❄', items: [{ id: 'drugfreezer_temp_ok', name: 'Temperature within range (−20°C to −15°C)', critical: true }, { id: 'drugfreezer_log_signed', name: 'Temperature logged and signed', critical: true }] }] },
   fridge_antenatal_drug:  { name: 'Antenatal Drug Fridge — Temperature', location: 'Antenatal Ward', image: 'images/fridge_escalation_flowchart.jpg', imageCaption: 'Acceptable range 2–8°C — pharmacy 01494 425355', frequency: 'daily', temperatureCheck: true, categories: [{ name: 'Temperature 2–8°C', icon: '💊', items: [{ id: 'antefridge_temp_ok', name: 'Temperature within range (2–8°C)', critical: true, image: 'images/fridge_escalation_flowchart.jpg' }, { id: 'antefridge_log_signed', name: 'Temperature logged and signed', critical: true }] }] },
   fridge_postnatal_drug:  { name: 'Postnatal Drug Fridge — Temperature', location: 'Postnatal Ward', image: 'images/fridge_escalation_flowchart.jpg', imageCaption: 'Acceptable range 2–8°C — pharmacy 01494 425355', frequency: 'daily', temperatureCheck: true, categories: [{ name: 'Temperature 2–8°C', icon: '💊', items: [{ id: 'postfridge_temp_ok', name: 'Temperature within range (2–8°C)', critical: true, image: 'images/fridge_escalation_flowchart.jpg' }, { id: 'postfridge_log_signed', name: 'Temperature logged and signed', critical: true }] }] },
   fridge_staff:           { name: 'Staff Fridge — Temperature', location: 'Staff Area', image: 'images/fridge_escalation_flowchart.jpg', imageCaption: 'Acceptable range 2–8°C', frequency: 'daily', temperatureCheck: true, categories: [{ name: 'Temperature 2–8°C', icon: '🥪', items: [{ id: 'stafffridge_temp_ok', name: 'Temperature within range (2–8°C)', critical: true }, { id: 'stafffridge_log_signed', name: 'Temperature logged and signed', critical: true }] }] },
@@ -481,7 +481,7 @@ let isEmergencyCheck = false;
 function init() {
   updateTime();
   setInterval(updateTime, 30000);
-  if (CONFIG.supabaseUrl === 'YOUR_SUPABASE_URL') {
+  if (!CONFIG.supabaseUrl || CONFIG.supabaseUrl === 'YOUR_SUPABASE_URL') {
     document.getElementById('configNotice').style.display = 'block';
   }
   const params = new URLSearchParams(window.location.search);
@@ -520,7 +520,7 @@ function renderHero() {
 }
 
 async function loadLastCheck(eqId) {
-  if (CONFIG.supabaseUrl === 'YOUR_SUPABASE_URL') return;
+  if (!CONFIG.supabaseUrl || CONFIG.supabaseUrl === 'YOUR_SUPABASE_URL') return;
   try {
     const res = await fetch(`${CONFIG.supabaseUrl}/rest/v1/equipment_checks?equipment_id=eq.${eqId}&order=checked_at.desc&limit=1`, {
       headers:{'apikey':CONFIG.supabaseKey,'Authorization':`Bearer ${CONFIG.supabaseKey}`}
@@ -678,7 +678,7 @@ async function submitCheck() {
   document.getElementById('submitBtn').textContent = 'Submitting...';
 
   let saved = false;
-  if (CONFIG.supabaseUrl !== 'YOUR_SUPABASE_URL') {
+  if (CONFIG.supabaseUrl !== 'https://cmewfvbkiwhbsadaongu.supabase.co') {
     try {
       const res = await fetch(`${CONFIG.supabaseUrl}/rest/v1/equipment_checks`, {
         method:'POST',
