@@ -221,26 +221,11 @@ const CONFIG = {
 const EQUIPMENT_DB = {
 
   hypo_box_daily: {
-    name: 'Hypo Box — Daily Visual Check',
-    location: 'Rothschild Ward',
-    image: 'images/hypo_box.jpg',
-    imageCaption: 'Confirm hypo box is present and seal is intact',
-    frequency: 'daily',
-    afterEmergency: true,
-    categories: [{
-      name: 'Visual Check', icon: '👁',
-      items: [
-        { id: 'hypo_present', name: 'Hypo box present in correct location', desc: 'Box is in its designated position', critical: true, image: 'images/hypo_box_location.jpg' },
-      ]
-    }]
-  },
-
-  hypo_box_weekly: {
-    name: 'Hypo Box — Weekly Full Check',
+    name: 'Hypo Box — Daily Full Check',
     location: 'Rothschild Ward',
     image: 'images/hypo_box.jpg',
     imageCaption: 'Full contents check — all items present and in date',
-    frequency: 'weekly',
+    frequency: 'daily',
     afterEmergency: true,
     categories: [
       { name: 'Fridge Item', icon: '❄', items: [
