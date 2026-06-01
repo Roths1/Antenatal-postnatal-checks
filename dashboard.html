@@ -191,6 +191,8 @@ tr:hover td{background:var(--grey5);}
     <div class="eq-grid" id="sbrGrid"></div>
     <div class="section-title">Instrument Washer <span>Daily check</span></div>
     <div class="eq-grid" id="washerGrid"></div>
+    <div class="section-title">Tristel <span>Daily check</span></div>
+    <div class="eq-grid" id="tristelGrid"></div>
   </div>
 </div>
 
@@ -277,6 +279,7 @@ const EQUIP_META = {
   glucose_monitor_nursery:    { name:'Glucose Monitor — Daily Calibration', freq:'daily', image:'images/glucose_monitor.jpg', location:'Nursery' },
   sbr_machine:                { name:'SBR Machine — Daily Check', freq:'daily', image:'images/glucose_monitor.jpg', location:'Nursery' },
   washer_rothschild:          { name:'Instrument Washer — Daily Check', freq:'daily', image:'images/instrument_washer.jpg', location:'Rothschild Ward' },
+  tristel_bottle:             { name:'Tristel Bottle — Daily Check', freq:'daily', image:'images/tristel_bottle.jpg', location:'Rothschild Ward' },
   fridge_milk:                { name:'Milk Fridge', freq:'daily', location:'Milk Kitchen' },
   freezer_milk:               { name:'Milk Freezer', freq:'daily', location:'Milk Kitchen' },
   freezer_drug:               { name:'Drug Freezer', freq:'daily', location:'Rothschild Ward' },
@@ -293,7 +296,6 @@ const EQUIP_META = {
   temp_postnatal_ward_pm:     { name:'Postnatal Ward — Temp (PM)', freq:'daily', location:'Postnatal Ward' },
   clean_resusitaire_rothschild:{ name:'Resusitaire — Weekly Clean', freq:'weekly', image:'images/resuscitaire_cleaning.jpg', location:'Rothschild Ward' },
   clean_uss_1:                { name:'USS Machine 1 — Weekly Clean', freq:'weekly', image:'images/uss_machine.jpg', location:'Rothschild Ward' },
-  clean_uss_2:                { name:'USS Machine 2 — Weekly Clean', freq:'weekly', image:'images/uss_machine.jpg', location:'Rothschild Ward' },
   clean_cpr_trolley:          { name:'CPR Trolley — Weekly Clean', freq:'weekly', image:'images/cpr_trolley.jpg', location:'Rothschild Ward' },
 };
 
@@ -326,7 +328,6 @@ const FRIDGE_RANGE = { fridge_milk:'2–8°C', freezer_milk:'−20°C to −15°
 const AREA_TEMP_IDS = ['temp_drug_prep_am','temp_drug_prep_pm','temp_milk_kitchen_am','temp_milk_kitchen_pm','temp_antenatal_ward_am','temp_antenatal_ward_pm','temp_postnatal_ward_am','temp_postnatal_ward_pm'];
 
 const RES_CLEAN_IDS = ['clean_resusitaire_rothschild'];
-const USS_CLEAN_IDS = ['clean_uss_1','clean_uss_2'];
 const CPR_CLEAN_IDS = ['clean_cpr_trolley'];
 
 const ALL_IDS = [
@@ -334,6 +335,7 @@ const ALL_IDS = [
   ...SIDE_ROOM_IDS.map(r=>r.id), ...SUITE_IDS.map(r=>r.id), ...BAY_IDS.map(r=>r.id),
   ...TCB_IDS, ...GLUCOSE_IDS, ...SBR_IDS, ...WASHER_IDS,
   ...FRIDGE_IDS, ...AREA_TEMP_IDS,
+  'tristel_bottle',
   ...RES_CLEAN_IDS, ...USS_CLEAN_IDS, ...CPR_CLEAN_IDS,
 ];
 
@@ -556,6 +558,7 @@ function renderNursery(){
   document.getElementById('glucoseGrid').innerHTML=GLUCOSE_IDS.map(makeEqCard).join('');
   document.getElementById('sbrGrid').innerHTML=SBR_IDS.map(makeEqCard).join('');
   document.getElementById('washerGrid').innerHTML=WASHER_IDS.map(makeEqCard).join('');
+  document.getElementById('tristelGrid').innerHTML=['tristel_bottle'].map(makeEqCard).join('');
 }
 
 function renderEnvironment(){
