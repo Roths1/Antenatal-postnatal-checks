@@ -193,8 +193,6 @@ tr:hover td{background:var(--grey5);}
     <div class="eq-grid" id="glucoseGrid"></div>
     <div class="section-title">SBR Machine <span>Daily check — acceptable range 329–379</span></div>
     <div class="eq-grid" id="sbrGrid"></div>
-    <div class="section-title">Instrument Washer <span>Daily check</span></div>
-    <div class="eq-grid" id="washerGrid"></div>
   </div>
 </div>
 
@@ -213,6 +211,8 @@ tr:hover td{background:var(--grey5);}
   <div class="main">
     <div class="section-title" style="margin-top:4px;">Tristel <span>Daily check</span></div>
     <div class="eq-grid" id="tristelGrid"></div>
+    <div class="section-title">Instrument Washer <span>Daily check</span></div>
+    <div class="eq-grid" id="washerGrid"></div>
     <div class="section-title">Resusitaire Clean <span>Weekly</span></div>
     <div class="eq-grid" id="resCleanGrid"></div>
     <div class="section-title">USS Machine Clean <span>Weekly</span></div>
@@ -513,9 +513,9 @@ function setCompStat(elId, pct){
 function renderCompliance(){
   setCompStat('comp-emergency', avgCompliance([...CD_IDS,...RES_IDS,...CPR_IDS,...HYPO_IDS,...EMERG_TROLLEY_IDS]));
   setCompStat('comp-rooms', avgCompliance([...SIDE_ROOM_IDS.map(r=>r.id),...SUITE_IDS.map(r=>r.id),...BAY_IDS.map(r=>r.id)]));
-  setCompStat('comp-nursery', avgCompliance([...TCB_IDS,...GLUCOSE_IDS,...SBR_IDS,...WASHER_IDS]));
+  setCompStat('comp-nursery', avgCompliance([...TCB_IDS,...GLUCOSE_IDS,...SBR_IDS]));
   setCompStat('comp-environment', avgCompliance([...AREA_TEMP_IDS,...FRIDGE_IDS]));
-  setCompStat('comp-cleaning', avgCompliance(['tristel_bottle',...RES_CLEAN_IDS,...USS_CLEAN_IDS,...CPR_CLEAN_IDS]));
+  setCompStat('comp-cleaning', avgCompliance(['tristel_bottle',...WASHER_IDS,...RES_CLEAN_IDS,...USS_CLEAN_IDS,...CPR_CLEAN_IDS]));
 }
 
 function renderStats(){
@@ -569,7 +569,6 @@ function renderNursery(){
   document.getElementById('tcbGrid').innerHTML=TCB_IDS.map(makeEqCard).join('');
   document.getElementById('glucoseGrid').innerHTML=GLUCOSE_IDS.map(makeEqCard).join('');
   document.getElementById('sbrGrid').innerHTML=SBR_IDS.map(makeEqCard).join('');
-  document.getElementById('washerGrid').innerHTML=WASHER_IDS.map(makeEqCard).join('');
 }
 
 function renderEnvironment(){
@@ -615,6 +614,7 @@ function renderCleaning(){
     }).join('');
   }
   document.getElementById('tristelGrid').innerHTML=['tristel_bottle'].map(makeEqCard).join('');
+  document.getElementById('washerGrid').innerHTML=WASHER_IDS.map(makeEqCard).join('');
   document.getElementById('resCleanGrid').innerHTML=cleanCards(RES_CLEAN_IDS,'weekly');
   document.getElementById('ussCleanGrid').innerHTML=cleanCards(USS_CLEAN_IDS,'weekly');
   document.getElementById('cprCleanGrid').innerHTML=cleanCards(CPR_CLEAN_IDS,'weekly');
