@@ -388,16 +388,25 @@ async function loadData(){
 }
 
 // ── HELPERS ───────────────────────────────────────────────
-const FREQ_MS = {daily:86400000, weekly:7*86400000, monthly:30*86400000};
+function todayStart(){
+  const d=new Date(); d.setHours(0,0,0,0); return d;
+}
+function thisWeekStart(){
+  const d=new Date(); d.setHours(0,0,0,0);
+  d.setDate(d.getDate()-d.getDay()); return d;
+}
 
 function getStatus(id, freqKey){
   const checks = allChecks.filter(c=>c.equipment_id===id);
   const last = checks[0];
   if(!last) return 'never';
   if(last.overall_status==='fail') return 'fail';
-  const ms = FREQ_MS[freqKey] || FREQ_MS.daily;
-  if(Date.now()-new Date(last.checked_at)>ms) return 'overdue';
-  return 'pass';
+  const lastDate = new Date(last.checked_at);
+  if(freqKey==='weekly'){
+    return lastDate >= thisWeekStart() ? 'pass' : 'overdue';
+  }
+  // daily and twice-daily: must have been checked since midnight today
+  return lastDate >= todayStart() ? 'pass' : 'overdue';
 }
 
 function pillClass(st){return {pass:'pill-pass',fail:'pill-fail',overdue:'pill-overdue',never:'pill-never'}[st]||'pill-never';}

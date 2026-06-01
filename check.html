@@ -564,6 +564,28 @@ function buildChecklist() {
   }
 
   let html = '';
+
+  // Mandatory temperature input for temperature checks
+  if (eq.temperatureCheck) {
+    const isFreeze = currentEqId.includes('freezer');
+    const isArea = currentEqId.startsWith('temp_');
+    let rangeText = '';
+    if (isArea) rangeText = 'Maximum 25°C — escalate if exceeded';
+    else if (isFreeze) rangeText = 'Acceptable range: −20°C to −15°C';
+    else rangeText = 'Acceptable range: 2–8°C';
+    html += `<div class="temp-input-wrap" id="tempInputWrap">
+      <div class="temp-label">🌡 Record the temperature reading <span style="color:var(--red);font-weight:700;">*required</span></div>
+      <div style="display:flex;align-items:center;margin-top:6px;">
+        <input class="temp-input" type="number" step="0.1" id="tempReading" placeholder="0.0" oninput="onTempInput()" inputmode="decimal">
+        <span class="temp-unit">°C</span>
+      </div>
+      <div style="margin-top:6px;font-size:12px;color:var(--grey2);">${rangeText}</div>
+      <div class="temp-alert" id="tempAlert">
+        <strong>⚠ Temperature out of range</strong>
+        This reading is outside the acceptable range. Complete the check, record the fault note below, and escalate immediately to the shift lead. Pharmacy: 01494 425355
+      </div>
+    </div>`;
+  }
   eq.categories.forEach(cat => {
     html += `<div class="cat-header"><div class="cat-icon">${cat.icon}</div>${cat.name}</div>`;
     cat.items.forEach(item => {
@@ -595,6 +617,7 @@ function buildChecklist() {
 
   document.getElementById('checksBody').innerHTML = html;
   updateProgress();
+  updateSubmit();
 }
 
 function setAns(itemId, ans) {
@@ -624,6 +647,21 @@ function updateProgress() {
   document.getElementById('progressText').textContent = `${done} of ${items.length} answered`;
 }
 
+function onTempInput() {
+  const val = parseFloat(document.getElementById('tempReading').value);
+  const alert = document.getElementById('tempAlert');
+  if (isNaN(val)) { alert.classList.remove('show'); return; }
+  tempValues['current_reading'] = val;
+  const isFreeze = currentEqId.includes('freezer');
+  const isArea = currentEqId.startsWith('temp_');
+  let inRange;
+  if (isArea) inRange = val <= 25;
+  else if (isFreeze) inRange = val >= -20 && val <= -15;
+  else inRange = val >= 2 && val <= 8;
+  alert.classList.toggle('show', !inRange);
+  updateSubmit();
+}
+
 function updateSubmit() {
   const items = getAllItems();
   const allAnswered = items.every(i => answers[i.id]);
@@ -631,9 +669,14 @@ function updateSubmit() {
     const el = document.getElementById(`fnotetxt-${i.id}`);
     return el && !el.value.trim();
   });
-  const canSubmit = allAnswered && !failsMissingNotes;
+  // Require temperature reading for temperature checks
+  const tempRequired = currentEquip.temperatureCheck;
+  const tempEl = document.getElementById('tempReading');
+  const tempMissing = tempRequired && (!tempEl || tempEl.value.trim() === '');
+  const canSubmit = allAnswered && !failsMissingNotes && !tempMissing;
   document.getElementById('submitBtn').disabled = !canSubmit;
-  if (!allAnswered) document.getElementById('submitNote').textContent = 'Answer all items to submit';
+  if (tempMissing) document.getElementById('submitNote').textContent = 'Enter the temperature reading to submit';
+  else if (!allAnswered) document.getElementById('submitNote').textContent = 'Answer all items to submit';
   else if (failsMissingNotes) document.getElementById('submitNote').textContent = 'Add fault notes for all failed items';
   else document.getElementById('submitNote').textContent = 'All items answered — ready to submit';
 }
@@ -649,6 +692,11 @@ async function submitCheck() {
       if(el) failNotes[i.id] = el.value.trim();
     }
   });
+  // Capture temperature reading
+  const tempEl = document.getElementById('tempReading');
+  if (tempEl && tempEl.value.trim() !== '') {
+    tempValues['current_reading'] = parseFloat(tempEl.value);
+  }
 
   const passCount = items.filter(i=>answers[i.id]==='pass').length;
   const failCount = items.filter(i=>answers[i.id]==='fail').length;
