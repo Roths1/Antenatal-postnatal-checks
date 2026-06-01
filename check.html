@@ -876,15 +876,18 @@ function onTempInput() {
     if (!isNaN(curr)) tempValues['current_reading'] = curr;
     if (!isNaN(min))  tempValues['min_reading'] = min;
     if (!isNaN(max))  tempValues['max_reading'] = max;
-    const tMin = eq.tempMin; const tMax = eq.tempMax;
-    const anyOutOfRange = [curr, min, max].some(v => !isNaN(v) && (v < tMin || v > tMax));
-    if(alert) alert.classList.toggle('show', anyOutOfRange);
+    // Derive range — use eq.tempMin/tempMax if set, otherwise fall back by type
+    const tMin = (typeof eq.tempMin !== 'undefined') ? eq.tempMin : (isFreeze ? -20 : 2);
+    const tMax = (typeof eq.tempMax !== 'undefined') ? eq.tempMax : (isFreeze ? -15 : 8);
+    const readings = [curr, min, max].filter(v => !isNaN(v));
+    const anyOutOfRange = readings.length > 0 && readings.some(v => v < tMin || v > tMax);
+    if (alert) alert.classList.toggle('show', anyOutOfRange);
   } else {
     const val = parseFloat(document.getElementById('tempReading').value);
-    if (isNaN(val)) { if(alert) alert.classList.remove('show'); return; }
+    if (isNaN(val)) { if (alert) alert.classList.remove('show'); return; }
     tempValues['current_reading'] = val;
     const inRange = isArea ? val <= 25 : isFreeze ? (val >= -20 && val <= -15) : (val >= 2 && val <= 8);
-    if(alert) alert.classList.toggle('show', !inRange);
+    if (alert) alert.classList.toggle('show', !inRange);
   }
   updateSubmit();
 }
