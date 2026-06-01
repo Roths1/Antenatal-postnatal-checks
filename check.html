@@ -255,23 +255,41 @@ const EQUIPMENT_DB = {
   },
 
   resusitaire_rothschild_daily: {
-    name: 'Resusitaire — Daily Top Check',
+    name: 'Resusitaire — Daily Full Check',
     location: 'Rothschild Ward',
     image: 'images/resuscitaire_top.jpg',
-    imageCaption: 'Daily visual check of resusitaire top surface and equipment',
+    imageCaption: 'Full daily check of all resusitaire equipment — check everything before clinical use',
     frequency: 'daily',
-    categories: [{
-      name: 'Top Surface Check', icon: '👶',
-      items: [
+    categories: [
+      { name: 'Power & Heat', icon: '🔌', items: [
         { id: 'res_power_on', name: 'Resusitaire powers on correctly', desc: 'Power on and heating element functional', critical: true },
+        { id: 'res_heat_working', name: 'Heating element reaching temperature', desc: 'Overhead heater warming up correctly', critical: true },
         { id: 'res_light_working', name: 'Overhead light working', desc: 'Examination light functional', critical: true },
+      ]},
+      { name: 'Oxygen & Airway', icon: '🫁', items: [
         { id: 'res_o2_connected', name: 'Oxygen connected and flow confirmed', desc: 'O2 supply connected, check flow meter', critical: true, image: 'images/res_o2.jpg' },
-        { id: 'res_mask_present', name: 'Masks present (size 0 and 1)', desc: 'Both mask sizes present and in packaging', critical: true, image: 'images/res_mask_1.jpg' },
-        { id: 'res_suction_working', name: 'Suction working', desc: 'Suction functional, tubing present', critical: true, image: 'images/res_suction.jpg' },
-        { id: 'res_towels_present', name: 'Towels present', desc: 'Adequate supply of dry towels on resusitaire', critical: false, image: 'images/res_towels.jpg' },
-        { id: 'res_sats_probe', name: 'Sats probe present', desc: 'Neonatal sats probe present and connected', critical: true, image: 'images/res_sats_probe.jpg' },
-      ]
-    }]
+        { id: 'res_mask_size0', name: 'Mask size 0 present and in packaging', desc: 'Size 0 face mask present', critical: true, image: 'images/res_mask_1.jpg' },
+        { id: 'res_mask_size1', name: 'Mask size 1 present and in packaging', desc: 'Size 1 face mask present', critical: true, image: 'images/res_mask_1.jpg' },
+        { id: 'res_neopuff', name: 'T-piece / Neopuff circuit checked and connected', desc: 'Circuit intact, pressure limits set correctly', critical: true },
+        { id: 'res_peep_set', name: 'PEEP and PIP pressures set correctly', desc: 'Check pressure settings are within correct range', critical: true },
+        { id: 'res_airway_adjuncts', name: 'Airway adjuncts present (oral airways, laryngoscope)', desc: 'Check all sizes present and laryngoscope light working', critical: true },
+      ]},
+      { name: 'Suction', icon: '💨', items: [
+        { id: 'res_suction_working', name: 'Suction working and pressure correct', desc: 'Suction functional, correct pressure, tubing present', critical: true, image: 'images/res_suction.jpg' },
+        { id: 'res_suction_catheters', name: 'Suction catheters present (sizes 6, 8, 10)', desc: 'All three sizes present', critical: true },
+      ]},
+      { name: 'Monitoring & Drugs', icon: '📊', items: [
+        { id: 'res_sats_probe', name: 'Sats probe present and functional', desc: 'Neonatal sats probe present and connected', critical: true, image: 'images/res_sats_probe.jpg' },
+        { id: 'res_monitor_working', name: 'Monitor powers on and functioning', desc: 'Check monitor screen and leads', critical: true },
+        { id: 'res_drugs_present', name: 'Emergency drugs present and in date', desc: 'Check all resus drugs — replace anything expiring within 30 days', critical: true },
+        { id: 'res_syringes_present', name: 'Syringes and needles present', desc: 'Adequate supply of syringes and needles', critical: true },
+      ]},
+      { name: 'General', icon: '✅', items: [
+        { id: 'res_towels_present', name: 'Dry towels present', desc: 'Adequate supply of dry towels on resusitaire', critical: true, image: 'images/res_towels.jpg' },
+        { id: 'res_gloves_present', name: 'Gloves present (various sizes)', desc: 'Adequate supply of gloves at resusitaire', critical: false },
+        { id: 'res_log_signed', name: 'Daily check log signed and dated', desc: 'Sign and date the resusitaire daily check log', critical: true },
+      ]},
+    ]
   },
 
   clean_resusitaire_rothschild: {
