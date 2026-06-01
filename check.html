@@ -224,15 +224,14 @@ const EQUIPMENT_DB = {
     name: 'Controlled Drugs Check — AM',
     location: 'Rothschild Ward',
     image: 'images/cd_cupboard.jpg',
-    imageCaption: 'Morning CD check — both nurses to sign. Check register balance matches physical stock.',
+    imageCaption: 'Confirm CD book check has been completed and signed this morning',
     frequency: 'daily',
     categories: [{
-      name: 'CD Check — Morning', icon: '💊',
+      name: 'Morning CD Check', icon: '💊',
       items: [
-        { id: 'cd_am_register', name: 'CD register signed by two members of staff', desc: 'Both checking staff sign the CD register', critical: true, image: 'images/cd_register.jpg' },
-        { id: 'cd_am_balance', name: 'Register balance matches physical stock count', desc: 'Count all CDs and confirm balance matches register', critical: true },
-        { id: 'cd_am_cupboard_locked', name: 'CD cupboard locked after check', desc: 'Cupboard secured after completion of check', critical: true },
-        { id: 'cd_am_keys_returned', name: 'Keys returned to designated location', desc: 'CD keys returned immediately after use', critical: true },
+        { id: 'cd_am_book', name: 'CD book check completed and signed', desc: 'Two staff signatures present in CD book for this check', critical: true, image: 'images/cd_book.jpg' },
+        { id: 'cd_am_cupboard', name: 'CD cupboard locked and secure', desc: 'Cupboard locked, key returned to correct location', critical: true, image: 'images/cd_cupboard_locked.jpg' },
+        { id: 'cd_am_count', name: 'Stock count matches CD register', desc: 'Confirm physical count matches book', critical: true, image: 'images/cd_register.jpg' },
       ]
     }]
   },
@@ -241,15 +240,14 @@ const EQUIPMENT_DB = {
     name: 'Controlled Drugs Check — PM',
     location: 'Rothschild Ward',
     image: 'images/cd_cupboard.jpg',
-    imageCaption: 'Evening CD check — both nurses to sign. Check register balance matches physical stock.',
+    imageCaption: 'Confirm CD book check has been completed and signed this evening',
     frequency: 'daily',
     categories: [{
-      name: 'CD Check — Evening', icon: '💊',
+      name: 'Evening CD Check', icon: '💊',
       items: [
-        { id: 'cd_pm_register', name: 'CD register signed by two members of staff', desc: 'Both checking staff sign the CD register', critical: true, image: 'images/cd_register.jpg' },
-        { id: 'cd_pm_balance', name: 'Register balance matches physical stock count', desc: 'Count all CDs and confirm balance matches register', critical: true },
-        { id: 'cd_pm_cupboard_locked', name: 'CD cupboard locked after check', desc: 'Cupboard secured after completion of check', critical: true },
-        { id: 'cd_pm_keys_returned', name: 'Keys returned to designated location', desc: 'CD keys returned immediately after use', critical: true },
+        { id: 'cd_pm_book', name: 'CD book check completed and signed', desc: 'Two staff signatures present in CD book for this check', critical: true, image: 'images/cd_book.jpg' },
+        { id: 'cd_pm_cupboard', name: 'CD cupboard locked and secure', desc: 'Cupboard locked, key returned to correct location', critical: true, image: 'images/cd_cupboard_locked.jpg' },
+        { id: 'cd_pm_count', name: 'Stock count matches CD register', desc: 'Confirm physical count matches book', critical: true, image: 'images/cd_register.jpg' },
       ]
     }]
   },
