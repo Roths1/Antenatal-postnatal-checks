@@ -288,6 +288,7 @@ const EQUIP_META = {
   tcb_machine_1:              { name:'TCB Machine 1 — Daily Calibration', freq:'daily', image:'images/tcb_machine.jpg', location:'Nursery' },
   tcb_machine_2:              { name:'TCB Machine 2 — Daily Calibration', freq:'daily', image:'images/tcb_machine.jpg', location:'Nursery' },
   glucose_monitor_nursery:    { name:'Glucose Monitor — Daily Calibration', freq:'daily', image:'images/glucose_monitor.jpg', location:'Nursery' },
+  glucose_monitor_nursery_2:  { name:'Glucose Monitor 2 — Daily Calibration', freq:'daily', image:'images/glucose_monitor.jpg', location:'Nursery' },
   sbr_machine:                { name:'SBR Machine — Daily Check', freq:'daily', image:'images/sbr_machine.jpg', location:'Nursery' },
   washer_rothschild:          { name:'Instrument Washer — Daily Check', freq:'daily', image:'images/instrument_washer.jpg', location:'Rothschild Ward' },
   tto_medication_daily:        { name:'TTO Medication — Daily Stock Check', freq:'daily', image:'images/tto_medication.jpg', location:'Rothschild Ward' },
@@ -339,7 +340,7 @@ const SUITE_IDS = [
 const BAY_IDS = [4,5,6,7,8,9,10,11,12].map(n=>({id:`room_check_bay${n}`,name:`Bay ${n}`,type:'O2 & Suction'}));
 
 const TCB_IDS = ['tcb_machine_1','tcb_machine_2'];
-const GLUCOSE_IDS = ['glucose_monitor_nursery'];
+const GLUCOSE_IDS = ['glucose_monitor_nursery','glucose_monitor_nursery_2'];
 const SBR_IDS = ['sbr_machine'];
 const CTG_IDS = ['ctg_monitor_1','ctg_monitor_2','ctg_monitor_3','ctg_monitor_4','ctg_monitor_5','ctg_monitor_6','ctg_monitor_7','ctg_monitor_8'];
 const WASHER_IDS = ['washer_rothschild'];

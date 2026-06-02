@@ -245,24 +245,7 @@ const EQUIPMENT_DB = {
     ]
   },
 
-  tto_medication_daily: {
-    name: 'TTO Medication — Daily Stock Check',
-    location: 'Rothschild Ward',
-    image: 'images/tto_medication.jpg',
-    imageCaption: 'Check TTO stock is present and the count is correct. Any discrepancy must be escalated to management immediately.',
-    frequency: 'daily',
-    categories: [
-      { name: 'TTO Stock Check', icon: '💊', items: [
-        { id: 'tto_stock_checked', name: 'TTO stock has been checked', desc: 'Confirm you have physically checked the TTO medication stock', critical: true, image: 'images/tto_medication.jpg' },
-        { id: 'tto_count_correct', name: 'Stock count is correct', desc: 'The stock count matches the expected level. If NO — escalate to management immediately.', critical: true, image: 'images/tto_medication.jpg' },
-      ]},
-      { name: 'Escalation', icon: '⚠️', items: [
-        { id: 'tto_escalation_na', name: 'Escalation to management completed (if count incorrect)', desc: 'If the stock count was incorrect, confirm that the Ward Manager or Coordinator has been informed. Mark as N/A if count was correct.', critical: false },
-      ]}
-    ]
-  },
-
-    emergency_trolley: {
+  emergency_trolley: {
     name: 'Emergency Trolley — Full Check',
     location: 'Rothschild Ward',
     image: 'images/roths_emergency_trolley.jpg',
@@ -577,6 +560,20 @@ const EQUIPMENT_DB = {
       { id: 'gm_high_run', name: 'High control run and in range', critical: true, image: 'images/gm_control_high.jpg' },
       { id: 'gm_strips_expiry', name: 'Test strips in date', critical: true, image: 'images/gm_strips_expiry.jpg' },
       { id: 'gm_lancets_present', name: 'Lancets present and in date', critical: false, image: 'images/gm_lancets.jpg' },
+    ]}]
+  },
+
+  glucose_monitor_nursery_2: {
+    name: 'Glucose Monitor 2 — Daily Calibration',
+    location: 'Nursery',
+    image: 'images/glucose_monitor.jpg',
+    imageCaption: 'Run high and low controls and record results',
+    frequency: 'daily',
+    categories: [{ name: 'Control Checks', icon: '🩸', items: [
+      { id: 'gm2_low_run', name: 'Low control run and in range', critical: true, image: 'images/gm_control_low.jpg' },
+      { id: 'gm2_high_run', name: 'High control run and in range', critical: true, image: 'images/gm_control_high.jpg' },
+      { id: 'gm2_strips_expiry', name: 'Test strips in date', critical: true, image: 'images/gm_strips_expiry.jpg' },
+      { id: 'gm2_lancets_present', name: 'Lancets present and in date', critical: false, image: 'images/gm_lancets.jpg' },
     ]}]
   },
 
