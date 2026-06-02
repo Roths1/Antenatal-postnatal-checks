@@ -171,6 +171,8 @@ tr:hover td{background:var(--grey5);}
     <div class="eq-grid" id="emergTrolleyGrid"></div>
     <div class="section-title">CTG Monitors <span>Daily check — 8 monitors</span></div>
     <div class="eq-grid" id="ctgGrid"></div>
+    <div class="section-title">TTO Medication <span>Daily stock check — escalate to management if count incorrect</span></div>
+    <div class="eq-grid" id="ttoGrid"></div>
   </div>
 </div>
 
@@ -288,6 +290,7 @@ const EQUIP_META = {
   glucose_monitor_nursery:    { name:'Glucose Monitor — Daily Calibration', freq:'daily', image:'images/glucose_monitor.jpg', location:'Nursery' },
   sbr_machine:                { name:'SBR Machine — Daily Check', freq:'daily', image:'images/sbr_machine.jpg', location:'Nursery' },
   washer_rothschild:          { name:'Instrument Washer — Daily Check', freq:'daily', image:'images/instrument_washer.jpg', location:'Rothschild Ward' },
+  tto_medication_daily:        { name:'TTO Medication — Daily Stock Check', freq:'daily', image:'images/tto_medication.jpg', location:'Rothschild Ward' },
   ctg_monitor_1:              { name:'CTG Monitor 1 — Daily Check', freq:'daily', image:'images/ctg_machine.jpg', location:'Rothschild Ward' },
   ctg_monitor_2:              { name:'CTG Monitor 2 — Daily Check', freq:'daily', image:'images/ctg_machine.jpg', location:'Rothschild Ward' },
   ctg_monitor_3:              { name:'CTG Monitor 3 — Daily Check', freq:'daily', image:'images/ctg_machine.jpg', location:'Rothschild Ward' },
@@ -340,6 +343,7 @@ const GLUCOSE_IDS = ['glucose_monitor_nursery'];
 const SBR_IDS = ['sbr_machine'];
 const CTG_IDS = ['ctg_monitor_1','ctg_monitor_2','ctg_monitor_3','ctg_monitor_4','ctg_monitor_5','ctg_monitor_6','ctg_monitor_7','ctg_monitor_8'];
 const WASHER_IDS = ['washer_rothschild'];
+const TTO_IDS = ['tto_medication_daily'];
 
 const FRIDGE_IDS = ['fridge_milk','freezer_milk','freezer_drug','fridge_antenatal_drug','fridge_postnatal_drug','fridge_staff'];
 const FRIDGE_ICONS = { fridge_milk:'🥛', freezer_milk:'❄', freezer_drug:'❄', fridge_antenatal_drug:'💊', fridge_postnatal_drug:'💊', fridge_staff:'🥪' };
@@ -354,7 +358,7 @@ const CPR_CLEAN_IDS = ['clean_cpr_trolley'];
 const ALL_IDS = [
   ...CD_IDS, ...RES_IDS, ...CPR_IDS, ...HYPO_IDS, ...EMERG_TROLLEY_IDS,
   ...SIDE_ROOM_IDS.map(r=>r.id), ...SUITE_IDS.map(r=>r.id), ...BAY_IDS.map(r=>r.id),
-  ...TCB_IDS, ...GLUCOSE_IDS, ...SBR_IDS, ...CTG_IDS, ...WASHER_IDS,
+  ...TCB_IDS, ...GLUCOSE_IDS, ...SBR_IDS, ...CTG_IDS, ...WASHER_IDS, ...TTO_IDS,
   ...FRIDGE_IDS, ...AREA_TEMP_IDS,
   'tristel_bottle',
   ...RES_CLEAN_IDS, ...USS_CLEAN_IDS, ...CPR_CLEAN_IDS,
@@ -522,7 +526,7 @@ function setCompStat(elId, pct){
 }
 
 function renderCompliance(){
-  setCompStat('comp-emergency', avgCompliance([...CD_IDS,...RES_IDS,...CPR_IDS,...HYPO_IDS,...EMERG_TROLLEY_IDS]));
+  setCompStat('comp-emergency', avgCompliance([...CD_IDS,...RES_IDS,...CPR_IDS,...HYPO_IDS,...EMERG_TROLLEY_IDS,...TTO_IDS]));
   setCompStat('comp-rooms', avgCompliance([...SIDE_ROOM_IDS.map(r=>r.id),...SUITE_IDS.map(r=>r.id),...BAY_IDS.map(r=>r.id)]));
   setCompStat('comp-nursery', avgCompliance([...TCB_IDS,...GLUCOSE_IDS,...SBR_IDS]));
   setCompStat('comp-environment', avgCompliance([...AREA_TEMP_IDS,...FRIDGE_IDS]));
@@ -569,6 +573,7 @@ function renderEmergency(){
   document.getElementById('hypoGrid').innerHTML=filterIds(HYPO_IDS).map(makeEqCard).join('');
   document.getElementById('emergTrolleyGrid').innerHTML=filterIds(EMERG_TROLLEY_IDS).map(makeEqCard).join('');
   document.getElementById('ctgGrid').innerHTML=CTG_IDS.map(makeEqCard).join('');
+  document.getElementById('ttoGrid').innerHTML=TTO_IDS.map(makeEqCard).join('');
 }
 
 function renderRooms(){
