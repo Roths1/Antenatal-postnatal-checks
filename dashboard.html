@@ -193,6 +193,8 @@ tr:hover td{background:var(--grey5);}
     <div class="eq-grid" id="glucoseGrid"></div>
     <div class="section-title">SBR Machine <span>Daily check — acceptable range 329–379</span></div>
     <div class="eq-grid" id="sbrGrid"></div>
+    <div class="section-title">CTG Monitors <span>Daily check — 8 monitors</span></div>
+    <div class="eq-grid" id="ctgGrid"></div>
   </div>
 </div>
 
@@ -285,6 +287,14 @@ const EQUIP_META = {
   glucose_monitor_nursery:    { name:'Glucose Monitor — Daily Calibration', freq:'daily', image:'images/glucose_monitor.jpg', location:'Nursery' },
   sbr_machine:                { name:'SBR Machine — Daily Check', freq:'daily', image:'images/sbr_machine.jpg', location:'Nursery' },
   washer_rothschild:          { name:'Instrument Washer — Daily Check', freq:'daily', image:'images/instrument_washer.jpg', location:'Rothschild Ward' },
+  ctg_monitor_1:              { name:'CTG Monitor 1 — Daily Check', freq:'daily', image:'images/ctg_machine.jpg', location:'Rothschild Ward' },
+  ctg_monitor_2:              { name:'CTG Monitor 2 — Daily Check', freq:'daily', image:'images/ctg_machine.jpg', location:'Rothschild Ward' },
+  ctg_monitor_3:              { name:'CTG Monitor 3 — Daily Check', freq:'daily', image:'images/ctg_machine.jpg', location:'Rothschild Ward' },
+  ctg_monitor_4:              { name:'CTG Monitor 4 — Daily Check', freq:'daily', image:'images/ctg_machine.jpg', location:'Rothschild Ward' },
+  ctg_monitor_5:              { name:'CTG Monitor 5 — Daily Check', freq:'daily', image:'images/ctg_machine.jpg', location:'Rothschild Ward' },
+  ctg_monitor_6:              { name:'CTG Monitor 6 — Daily Check', freq:'daily', image:'images/ctg_machine.jpg', location:'Rothschild Ward' },
+  ctg_monitor_7:              { name:'CTG Monitor 7 — Daily Check', freq:'daily', image:'images/ctg_machine.jpg', location:'Rothschild Ward' },
+  ctg_monitor_8:              { name:'CTG Monitor 8 — Daily Check', freq:'daily', image:'images/ctg_machine.jpg', location:'Rothschild Ward' },
   tristel_bottle:             { name:'Tristel Bottle — Daily Check', freq:'daily', image:'images/tristel_bottle.jpg', location:'Rothschild Ward' },
   fridge_milk:                { name:'Milk Fridge', freq:'daily', location:'Milk Kitchen' },
   freezer_milk:               { name:'Milk Freezer', freq:'daily', location:'Milk Kitchen' },
@@ -327,6 +337,7 @@ const BAY_IDS = [4,5,6,7,8,9,10,11,12].map(n=>({id:`room_check_bay${n}`,name:`Ba
 const TCB_IDS = ['tcb_machine_1','tcb_machine_2'];
 const GLUCOSE_IDS = ['glucose_monitor_nursery'];
 const SBR_IDS = ['sbr_machine'];
+const CTG_IDS = ['ctg_monitor_1','ctg_monitor_2','ctg_monitor_3','ctg_monitor_4','ctg_monitor_5','ctg_monitor_6','ctg_monitor_7','ctg_monitor_8'];
 const WASHER_IDS = ['washer_rothschild'];
 
 const FRIDGE_IDS = ['fridge_milk','freezer_milk','freezer_drug','fridge_antenatal_drug','fridge_postnatal_drug','fridge_staff'];
@@ -342,7 +353,7 @@ const CPR_CLEAN_IDS = ['clean_cpr_trolley'];
 const ALL_IDS = [
   ...CD_IDS, ...RES_IDS, ...CPR_IDS, ...HYPO_IDS, ...EMERG_TROLLEY_IDS,
   ...SIDE_ROOM_IDS.map(r=>r.id), ...SUITE_IDS.map(r=>r.id), ...BAY_IDS.map(r=>r.id),
-  ...TCB_IDS, ...GLUCOSE_IDS, ...SBR_IDS, ...WASHER_IDS,
+  ...TCB_IDS, ...GLUCOSE_IDS, ...SBR_IDS, ...CTG_IDS, ...WASHER_IDS,
   ...FRIDGE_IDS, ...AREA_TEMP_IDS,
   'tristel_bottle',
   ...RES_CLEAN_IDS, ...USS_CLEAN_IDS, ...CPR_CLEAN_IDS,
@@ -512,7 +523,7 @@ function setCompStat(elId, pct){
 function renderCompliance(){
   setCompStat('comp-emergency', avgCompliance([...CD_IDS,...RES_IDS,...CPR_IDS,...HYPO_IDS,...EMERG_TROLLEY_IDS]));
   setCompStat('comp-rooms', avgCompliance([...SIDE_ROOM_IDS.map(r=>r.id),...SUITE_IDS.map(r=>r.id),...BAY_IDS.map(r=>r.id)]));
-  setCompStat('comp-nursery', avgCompliance([...TCB_IDS,...GLUCOSE_IDS,...SBR_IDS]));
+  setCompStat('comp-nursery', avgCompliance([...TCB_IDS,...GLUCOSE_IDS,...SBR_IDS,...CTG_IDS]));
   setCompStat('comp-environment', avgCompliance([...AREA_TEMP_IDS,...FRIDGE_IDS]));
   setCompStat('comp-cleaning', avgCompliance(['tristel_bottle',...WASHER_IDS,...RES_CLEAN_IDS,...USS_CLEAN_IDS,...CPR_CLEAN_IDS]));
 }
@@ -568,6 +579,7 @@ function renderNursery(){
   document.getElementById('tcbGrid').innerHTML=TCB_IDS.map(makeEqCard).join('');
   document.getElementById('glucoseGrid').innerHTML=GLUCOSE_IDS.map(makeEqCard).join('');
   document.getElementById('sbrGrid').innerHTML=SBR_IDS.map(makeEqCard).join('');
+  document.getElementById('ctgGrid').innerHTML=CTG_IDS.map(makeEqCard).join('');
 }
 
 function renderEnvironment(){
