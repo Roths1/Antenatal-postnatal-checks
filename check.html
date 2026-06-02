@@ -1004,15 +1004,15 @@ function buildChecklist() {
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:8px;">
           <div>
             <div style="font-size:11px;font-weight:700;color:var(--grey2);margin-bottom:4px;">CURRENT °C</div>
-            <input class="temp-input" style="width:100%;" type="number" step="0.1" id="tempCurrent" placeholder="0.0" oninput="onTempInput()" inputmode="decimal">
+            <input class="temp-input" style="width:100%;" type="text" inputmode="text" id="tempCurrent" placeholder="${isFreeze ? '−18.0' : '4.0'}" oninput="onTempInput()">
           </div>
           <div>
             <div style="font-size:11px;font-weight:700;color:var(--grey2);margin-bottom:4px;">MIN °C</div>
-            <input class="temp-input" style="width:100%;" type="number" step="0.1" id="tempMin" placeholder="0.0" oninput="onTempInput()" inputmode="decimal">
+            <input class="temp-input" style="width:100%;" type="text" inputmode="text" id="tempMin" placeholder="${isFreeze ? '−20.0' : '2.0'}" oninput="onTempInput()">
           </div>
           <div>
             <div style="font-size:11px;font-weight:700;color:var(--grey2);margin-bottom:4px;">MAX °C</div>
-            <input class="temp-input" style="width:100%;" type="number" step="0.1" id="tempMax" placeholder="0.0" oninput="onTempInput()" inputmode="decimal">
+            <input class="temp-input" style="width:100%;" type="text" inputmode="text" id="tempMax" placeholder="${isFreeze ? '−15.0' : '8.0'}" oninput="onTempInput()">
           </div>
         </div>
         <div style="margin-top:6px;font-size:12px;color:var(--grey2);">${rangeText}</div>
@@ -1034,7 +1034,7 @@ function buildChecklist() {
       html += `<div class="temp-input-wrap" id="tempInputWrap">
         <div class="temp-label">🌡 Record the temperature reading <span style="color:var(--red);font-weight:700;">*required</span></div>
         <div style="display:flex;align-items:center;margin-top:6px;">
-          <input class="temp-input" type="number" step="0.1" id="tempReading" placeholder="0.0" oninput="onTempInput()" inputmode="decimal">
+          <input class="temp-input" type="text" inputmode="text" id="tempReading" placeholder="${isFreeze ? '−18.0' : isArea ? '22.0' : '4.0'}" oninput="onTempInput()">
           <span class="temp-unit">°C</span>
         </div>
         <div style="margin-top:6px;font-size:12px;color:var(--grey2);">${rangeText}</div>
@@ -1106,28 +1106,36 @@ function updateProgress() {
   document.getElementById('progressText').textContent = `${done} of ${items.length} answered`;
 }
 
+function parseTempVal(str) {
+  if (!str) return NaN;
+  return parseFloat(str.replace('\u2212', '-').replace(',', '.').trim());
+}
+function tempFieldHasValue(el) {
+  if (!el) return false;
+  const s = el.value.trim();
+  if (s === '' || s === '-' || s === '\u2212') return false;
+  return !isNaN(parseTempVal(s));
+}
 function onTempInput() {
   const eq = currentEquip;
   const isFreeze = currentEqId.includes('freezer');
   const isArea = currentEqId.startsWith('temp_');
   const alert = document.getElementById('tempAlert');
-
   if (eq.fridgeCheck) {
-    const curr = parseFloat(document.getElementById('tempCurrent').value);
-    const min  = parseFloat(document.getElementById('tempMin').value);
-    const max  = parseFloat(document.getElementById('tempMax').value);
+    const curr = parseTempVal(document.getElementById('tempCurrent').value);
+    const min  = parseTempVal(document.getElementById('tempMin').value);
+    const max  = parseTempVal(document.getElementById('tempMax').value);
     if (!isNaN(curr)) tempValues['current_reading'] = curr;
     if (!isNaN(min))  tempValues['min_reading'] = min;
     if (!isNaN(max))  tempValues['max_reading'] = max;
-    // Derive range — use eq.tempMin/tempMax if set, otherwise fall back by type
     const tMin = (typeof eq.tempMin !== 'undefined') ? eq.tempMin : (isFreeze ? -20 : 2);
     const tMax = (typeof eq.tempMax !== 'undefined') ? eq.tempMax : (isFreeze ? -15 : 8);
     const readings = [curr, min, max].filter(v => !isNaN(v));
     const anyOutOfRange = readings.length > 0 && readings.some(v => v < tMin || v > tMax);
     if (alert) alert.classList.toggle('show', anyOutOfRange);
   } else {
-    const val = parseFloat(document.getElementById('tempReading').value);
-    if (isNaN(val)) { if (alert) alert.classList.remove('show'); return; }
+    const val = parseTempVal(document.getElementById('tempReading').value);
+    if (isNaN(val)) { if (alert) alert.classList.remove('show'); updateSubmit(); return; }
     tempValues['current_reading'] = val;
     const inRange = isArea ? val <= 25 : isFreeze ? (val >= -20 && val <= -15) : (val >= 2 && val <= 8);
     if (alert) alert.classList.toggle('show', !inRange);
@@ -1149,10 +1157,10 @@ function updateSubmit() {
       const curr = document.getElementById('tempCurrent');
       const min  = document.getElementById('tempMin');
       const max  = document.getElementById('tempMax');
-      tempMissing = !curr || curr.value.trim() === '' || !min || min.value.trim() === '' || !max || max.value.trim() === '';
+      tempMissing = !tempFieldHasValue(curr) || !tempFieldHasValue(min) || !tempFieldHasValue(max);
     } else {
       const tempEl = document.getElementById('tempReading');
-      tempMissing = !tempEl || tempEl.value.trim() === '';
+      tempMissing = !tempFieldHasValue(tempEl);
     }
   }
   const canSubmit = allAnswered && !failsMissingNotes && !tempMissing;
