@@ -169,6 +169,8 @@ tr:hover td{background:var(--grey5);}
     <div class="eq-grid" id="hypoGrid"></div>
     <div class="section-title">Emergency Trolley <span>Daily full check</span></div>
     <div class="eq-grid" id="emergTrolleyGrid"></div>
+    <div class="section-title">CTG Monitors <span>Daily check — 8 monitors</span></div>
+    <div class="eq-grid" id="ctgGrid"></div>
   </div>
 </div>
 
@@ -193,8 +195,7 @@ tr:hover td{background:var(--grey5);}
     <div class="eq-grid" id="glucoseGrid"></div>
     <div class="section-title">SBR Machine <span>Daily check — acceptable range 329–379</span></div>
     <div class="eq-grid" id="sbrGrid"></div>
-    <div class="section-title">CTG Monitors <span>Daily check — 8 monitors</span></div>
-    <div class="eq-grid" id="ctgGrid"></div>
+
   </div>
 </div>
 
@@ -523,7 +524,7 @@ function setCompStat(elId, pct){
 function renderCompliance(){
   setCompStat('comp-emergency', avgCompliance([...CD_IDS,...RES_IDS,...CPR_IDS,...HYPO_IDS,...EMERG_TROLLEY_IDS]));
   setCompStat('comp-rooms', avgCompliance([...SIDE_ROOM_IDS.map(r=>r.id),...SUITE_IDS.map(r=>r.id),...BAY_IDS.map(r=>r.id)]));
-  setCompStat('comp-nursery', avgCompliance([...TCB_IDS,...GLUCOSE_IDS,...SBR_IDS,...CTG_IDS]));
+  setCompStat('comp-nursery', avgCompliance([...TCB_IDS,...GLUCOSE_IDS,...SBR_IDS]));
   setCompStat('comp-environment', avgCompliance([...AREA_TEMP_IDS,...FRIDGE_IDS]));
   setCompStat('comp-cleaning', avgCompliance(['tristel_bottle',...WASHER_IDS,...RES_CLEAN_IDS,...USS_CLEAN_IDS,...CPR_CLEAN_IDS]));
 }
@@ -567,6 +568,7 @@ function renderEmergency(){
   document.getElementById('cprGrid').innerHTML=filterIds(CPR_IDS).map(makeEqCard).join('');
   document.getElementById('hypoGrid').innerHTML=filterIds(HYPO_IDS).map(makeEqCard).join('');
   document.getElementById('emergTrolleyGrid').innerHTML=filterIds(EMERG_TROLLEY_IDS).map(makeEqCard).join('');
+  document.getElementById('ctgGrid').innerHTML=CTG_IDS.map(makeEqCard).join('');
 }
 
 function renderRooms(){
@@ -579,7 +581,7 @@ function renderNursery(){
   document.getElementById('tcbGrid').innerHTML=TCB_IDS.map(makeEqCard).join('');
   document.getElementById('glucoseGrid').innerHTML=GLUCOSE_IDS.map(makeEqCard).join('');
   document.getElementById('sbrGrid').innerHTML=SBR_IDS.map(makeEqCard).join('');
-  document.getElementById('ctgGrid').innerHTML=CTG_IDS.map(makeEqCard).join('');
+
 }
 
 function renderEnvironment(){
