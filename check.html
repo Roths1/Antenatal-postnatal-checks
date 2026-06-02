@@ -589,6 +589,23 @@ const EQUIPMENT_DB = {
     ]}]
   },
 
+  tto_medication_daily: {
+    name: 'TTO Medication — Daily Stock Check',
+    location: 'Rothschild Ward',
+    image: 'images/tto_medication.jpg',
+    imageCaption: 'Check TTO stock is present and the count is correct. Any discrepancy must be escalated to management immediately.',
+    frequency: 'daily',
+    categories: [
+      { name: 'TTO Stock Check', icon: '💊', items: [
+        { id: 'tto_stock_checked', name: 'TTO stock has been checked', desc: 'Confirm you have physically checked the TTO medication stock', critical: true },
+        { id: 'tto_count_correct', name: 'Stock count is correct', desc: 'The stock count matches the expected level. If NO — escalate to management immediately.', critical: true },
+      ]},
+      { name: 'Escalation', icon: '⚠️', items: [
+        { id: 'tto_escalation_na', name: 'Escalation to management completed (if count incorrect)', desc: 'If the stock count was incorrect, confirm that the Ward Manager or Coordinator has been informed. Mark as N/A if count was correct.', critical: false },
+      ]}
+    ]
+  },
+
   washer_rothschild: {
     name: 'Instrument Washer — Daily Check',
     location: 'Rothschild Ward',
@@ -1308,5 +1325,3 @@ init();
 </script>
 </body>
 </html>
-
-
