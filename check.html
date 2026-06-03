@@ -1197,6 +1197,11 @@ function updateSubmit() {
 // ============================================================
 //  SUBMIT
 // ============================================================
+const WEEKLY_DAILY_COMPANION = {
+  'resusitaire_rothschild_weekly': 'resusitaire_rothschild_daily',
+  'cpr_trolley_weekly':            'cpr_trolley_daily',
+};
+
 async function submitCheck() {
   const items = getAllItems();
   items.forEach(i => {
@@ -1256,6 +1261,37 @@ async function submitCheck() {
         body: JSON.stringify(payload)
       });
       saved = res.ok;
+
+      // Auto-complete companion daily if this is a weekly check
+      const companionId = WEEKLY_DAILY_COMPANION[currentEqId];
+      if (saved && companionId && EQUIPMENT_DB[companionId]) {
+        const companionPayload = {
+          equipment_id: companionId,
+          equipment_name: EQUIPMENT_DB[companionId].name,
+          location: EQUIPMENT_DB[companionId].location,
+          frequency: 'daily',
+          staff_name: staffName,
+          checked_at: new Date().toISOString(),
+          overall_status: overall,
+          pass_count: passCount,
+          fail_count: failCount,
+          na_count: naCount,
+          critical_fails: critFails,
+          answers: { auto_completed: 'pass' },
+          fail_notes: {},
+          temperature_values: {},
+          ward: CONFIG.ward,
+          auto_completed_by: currentEqId
+        };
+        try {
+          await fetch(`${CONFIG.supabaseUrl}/rest/v1/equipment_checks`, {
+            method: 'POST',
+            headers: {'Content-Type':'application/json','apikey':CONFIG.supabaseKey,'Authorization':`Bearer ${CONFIG.supabaseKey}`,'Prefer':'return=minimal'},
+            body: JSON.stringify(companionPayload)
+          });
+          console.log('Companion daily auto-completed:', companionId);
+        } catch(e) { console.error('Companion daily save failed:', e); }
+      }
     } catch(e) { console.error(e); }
   }
 
