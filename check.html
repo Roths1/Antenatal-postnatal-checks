@@ -918,14 +918,12 @@ const EQUIPMENT_DB = {
     name: 'Bladder Scanner — Daily Check',
     location: 'Rothschild Ward',
     image: 'images/bladder_scanner.jpg',
-    imageCaption: 'Confirm bladder scanner is present, charged, and ready for use',
+    imageCaption: 'Daily cleaning check for bladder scanner',
     frequency: 'daily',
     categories: [{ name: 'Bladder Scanner Check', icon: '🔬', items: [
-      { id: 'blscan_present', name: 'Scanner present and in correct location', desc: 'Bladder scanner is in its designated storage location', critical: true, image: 'images/bladder_scanner.jpg' },
-      { id: 'blscan_charged', name: 'Battery charged / on charge', desc: 'Device is sufficiently charged or plugged in', critical: true, image: 'images/bladder_scanner.jpg' },
-      { id: 'blscan_probe', name: 'Probe present and undamaged', desc: 'Ultrasound probe is attached and free from damage', critical: true, image: 'images/bladder_scanner.jpg' },
-      { id: 'blscan_gel', name: 'Ultrasound gel present', desc: 'Sufficient gel available for use', critical: false, image: 'images/bladder_scanner.jpg' },
-      { id: 'blscan_clean', name: 'Probe cleaned after last use', desc: 'Confirm probe has been cleaned with approved solution', critical: true, image: 'images/bladder_scanner.jpg' },
+      { id: 'blscan_probe_cleaned', name: 'Probe cleaned with approved solution', critical: true },
+      { id: 'blscan_exterior_cleaned', name: 'Machine exterior cleaned', critical: true },
+      { id: 'blscan_signed', name: 'Check recorded and signed', critical: true },
     ]}]
   },
 
