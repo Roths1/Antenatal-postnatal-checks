@@ -1248,7 +1248,7 @@ async function submitCheck() {
   document.getElementById('submitBtn').textContent = 'Submitting...';
 
   let saved = false;
-  if (CONFIG.supabaseUrl !== 'https://cmewfvbkiwhbsadaongu.supabase.co') {
+  if (CONFIG.supabaseUrl === 'https://cmewfvbkiwhbsadaongu.supabase.co') {
     try {
       const res = await fetch(`${CONFIG.supabaseUrl}/rest/v1/equipment_checks`, {
         method:'POST',
