@@ -220,6 +220,8 @@ tr:hover td{background:var(--grey5);}
     <div class="eq-grid" id="washerGrid"></div>
     <div class="section-title">Resusitaire Clean <span>Weekly</span></div>
     <div class="eq-grid" id="resCleanGrid"></div>
+    <div class="section-title">Bladder Scanner <span>Daily check</span></div>
+    <div class="eq-grid" id="bladderGrid"></div>
     <div class="section-title">USS Machine Clean <span>Weekly</span></div>
     <div class="eq-grid" id="ussCleanGrid"></div>
     <div class="section-title">CPR Trolley Clean <span>Weekly</span></div>
@@ -282,6 +284,7 @@ const EQUIP_META = {
   room_check_bay7:            { name:'Bay 7', freq:'daily', location:'Bay 7' },
   room_check_bay8:            { name:'Bay 8', freq:'daily', location:'Bay 8' },
   room_check_bay9:            { name:'Bay 9', freq:'daily', location:'Bay 9' },
+  room_check_bay10:           { name:'Bay 10', freq:'daily', location:'Bay 10' },
   room_check_bay11:           { name:'Bay 11', freq:'daily', location:'Bay 11' },
   room_check_bay12:           { name:'Bay 12', freq:'daily', location:'Bay 12' },
   tcb_machine_1:              { name:'TCB Machine 1 — Daily Calibration', freq:'daily', image:'images/tcb_machine.jpg', location:'Nursery' },
@@ -315,6 +318,7 @@ const EQUIP_META = {
   temp_postnatal_ward_am:     { name:'Postnatal Ward — Temp (AM)', freq:'daily', location:'Postnatal Ward' },
   temp_postnatal_ward_pm:     { name:'Postnatal Ward — Temp (PM)', freq:'daily', location:'Postnatal Ward' },
   clean_resusitaire_rothschild:{ name:'Resusitaire — Weekly Clean', freq:'weekly', image:'images/resuscitaire_cleaning.jpg', location:'Rothschild Ward' },
+  bladder_scanner:            { name:'Bladder Scanner — Daily Check', freq:'daily', image:'images/bladder_scanner.jpg', location:'Rothschild Ward' },
   clean_uss_1:                { name:'USS Machine 1 — Weekly Clean', freq:'weekly', image:'images/uss_machine.jpg', location:'Rothschild Ward' },
   clean_cpr_trolley:          { name:'CPR Trolley — Weekly Clean', freq:'weekly', image:'images/cpr_trolley.jpg', location:'Rothschild Ward' },
 };
@@ -336,7 +340,7 @@ const SUITE_IDS = [
   {id:'room_check_rothschild_suite',name:'Rothschild Suite',type:'O2 & Suction'},
   {id:'room_check_verney_suite',name:'Verney Suite',type:'O2 & Suction'},
 ];
-const BAY_IDS = [4,5,6,7,8,9,11,12].map(n=>({id:`room_check_bay${n}`,name:`Bay ${n}`,type:'O2 & Suction'}));
+const BAY_IDS = [4,5,6,7,8,9,10,11,12].map(n=>({id:`room_check_bay${n}`,name:`Bay ${n}`,type:'O2 & Suction'}));
 
 const TCB_IDS = ['tcb_machine_1','tcb_machine_2'];
 const GLUCOSE_IDS = ['glucose_monitor_nursery','glucose_monitor_nursery_2'];
@@ -344,6 +348,7 @@ const SBR_IDS = ['sbr_machine'];
 const CTG_IDS = ['ctg_monitor_1','ctg_monitor_2','ctg_monitor_3','ctg_monitor_4','ctg_monitor_5','ctg_monitor_6','ctg_monitor_7','ctg_monitor_8'];
 const WASHER_IDS = ['washer_rothschild'];
 const TTO_IDS = ['tto_medication_daily'];
+const BLADDER_IDS = ['bladder_scanner'];
 
 const FRIDGE_IDS = ['fridge_milk','freezer_milk','freezer_drug','fridge_antenatal_drug','fridge_postnatal_drug','fridge_staff'];
 const FRIDGE_ICONS = { fridge_milk:'🥛', freezer_milk:'❄', freezer_drug:'❄', fridge_antenatal_drug:'💊', fridge_postnatal_drug:'💊', fridge_staff:'🥪' };
@@ -358,7 +363,7 @@ const CPR_CLEAN_IDS = ['clean_cpr_trolley'];
 const ALL_IDS = [
   ...CD_IDS, ...RES_IDS, ...CPR_IDS, ...HYPO_IDS, ...EMERG_TROLLEY_IDS,
   ...SIDE_ROOM_IDS.map(r=>r.id), ...SUITE_IDS.map(r=>r.id), ...BAY_IDS.map(r=>r.id),
-  ...TCB_IDS, ...GLUCOSE_IDS, ...SBR_IDS, ...CTG_IDS, ...WASHER_IDS, ...TTO_IDS,
+  ...TCB_IDS, ...GLUCOSE_IDS, ...SBR_IDS, ...CTG_IDS, ...WASHER_IDS, ...TTO_IDS, ...BLADDER_IDS,
   ...FRIDGE_IDS, ...AREA_TEMP_IDS,
   'tristel_bottle',
   ...RES_CLEAN_IDS, ...USS_CLEAN_IDS, ...CPR_CLEAN_IDS,
@@ -530,7 +535,7 @@ function renderCompliance(){
   setCompStat('comp-rooms', avgCompliance([...SIDE_ROOM_IDS.map(r=>r.id),...SUITE_IDS.map(r=>r.id),...BAY_IDS.map(r=>r.id)]));
   setCompStat('comp-nursery', avgCompliance([...TCB_IDS,...GLUCOSE_IDS,...SBR_IDS]));
   setCompStat('comp-environment', avgCompliance([...AREA_TEMP_IDS,...FRIDGE_IDS]));
-  setCompStat('comp-cleaning', avgCompliance(['tristel_bottle',...WASHER_IDS,...RES_CLEAN_IDS,...USS_CLEAN_IDS,...CPR_CLEAN_IDS]));
+  setCompStat('comp-cleaning', avgCompliance(['tristel_bottle',...WASHER_IDS,...RES_CLEAN_IDS,...USS_CLEAN_IDS,...CPR_CLEAN_IDS,...BLADDER_IDS]));
 }
 
 function renderStats(){
@@ -634,6 +639,7 @@ function renderCleaning(){
   document.getElementById('tristelGrid').innerHTML=['tristel_bottle'].map(makeEqCard).join('');
   document.getElementById('washerGrid').innerHTML=WASHER_IDS.map(makeEqCard).join('');
   document.getElementById('resCleanGrid').innerHTML=cleanCards(RES_CLEAN_IDS,'weekly');
+  document.getElementById('bladderGrid').innerHTML=BLADDER_IDS.map(makeEqCard).join('');
   document.getElementById('ussCleanGrid').innerHTML=cleanCards(USS_CLEAN_IDS,'weekly');
   document.getElementById('cprCleanGrid').innerHTML=cleanCards(CPR_CLEAN_IDS,'weekly');
 }
