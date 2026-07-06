@@ -782,7 +782,7 @@ function populateMonthPicker(){
     months[key] = label;
   });
   const sorted = Object.keys(months).sort().reverse();
-  document.querySelectorAll('#exportMonth').forEach(sel=>{
+  document.querySelectorAll('[id="exportMonth"]').forEach(sel=>{
     const current = sel.value;
     sel.innerHTML = '<option value="">Export: All data</option>' +
       sorted.map(k=>`<option value="${k}"${k===current?' selected':''}>${months[k]}</option>`).join('');
@@ -790,7 +790,10 @@ function populateMonthPicker(){
 }
 
 function exportCSV(){
-  const monthVal = (document.getElementById('exportMonth')||{}).value || '';
+  // Read whichever month picker has a non-empty value, or fall back to first
+  const pickers = document.querySelectorAll('[id="exportMonth"]');
+  let monthVal = '';
+  pickers.forEach(p => { if (p.value) monthVal = p.value; });
   let filtered = allChecks;
   let fileSuffix = new Date().toISOString().slice(0,10);
   if(monthVal){
