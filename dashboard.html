@@ -157,6 +157,9 @@ tr:hover td{background:var(--grey5);}
       <label>Filter:</label>
       <select class="fsel" id="emFreq" onchange="renderEmergency()"><option value="">All frequencies</option><option value="daily">Daily</option><option value="weekly">Weekly</option></select>
       <select class="fsel" id="emStatus" onchange="renderEmergency()"><option value="">All statuses</option><option value="fail">Issues only</option><option value="overdue">Overdue only</option></select>
+      <select class="fsel" id="exportMonth" style="font-weight:700;">
+        <option value="">Export: All data</option>
+      </select>
       <button class="export-btn" onclick="exportCSV()">⬇ Export CSV</button>
     </div>
     <div class="section-title">Controlled Drugs <span>Twice daily — AM &amp; PM</span></div>
@@ -237,6 +240,9 @@ tr:hover td{background:var(--grey5);}
       <input type="text" id="hSearch" class="fsel" placeholder="Search equipment name..." oninput="renderHistory()" style="min-width:200px;">
       <select class="fsel" id="hStatus" onchange="renderHistory()"><option value="">All statuses</option><option value="fail">Issues only</option><option value="pass">Pass only</option></select>
       <select class="fsel" id="hMonth" onchange="renderHistory()"></select>
+      <select class="fsel" id="exportMonth" style="font-weight:700;">
+        <option value="">Export: All data</option>
+      </select>
       <button class="export-btn" onclick="exportCSV()">⬇ Export CSV</button>
     </div>
     <div class="table-wrap"><div class="table-scroll">
@@ -417,6 +423,7 @@ async function loadData(){
     allChecks=[];
   }
   renderAll();
+  populateMonthPicker();
 }
 
 // ── HELPERS ───────────────────────────────────────────────
@@ -766,16 +773,43 @@ function renderHistory(){
   document.getElementById('histBody').innerHTML=rows||'<tr><td colspan="7" style="text-align:center;color:var(--grey3);padding:20px;">No records found</td></tr>';
 }
 
-function exportCSV(){
-  const rows=[['Equipment','Location','Staff','Date/Time','Result','Pass','Fail']];
+function populateMonthPicker(){
+  const months = {};
   allChecks.forEach(c=>{
+    const d = new Date(c.checked_at);
+    const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    const label = d.toLocaleDateString('en-GB',{month:'long',year:'numeric'});
+    months[key] = label;
+  });
+  const sorted = Object.keys(months).sort().reverse();
+  document.querySelectorAll('#exportMonth').forEach(sel=>{
+    const current = sel.value;
+    sel.innerHTML = '<option value="">Export: All data</option>' +
+      sorted.map(k=>`<option value="${k}"${k===current?' selected':''}>${months[k]}</option>`).join('');
+  });
+}
+
+function exportCSV(){
+  const monthVal = (document.getElementById('exportMonth')||{}).value || '';
+  let filtered = allChecks;
+  let fileSuffix = new Date().toISOString().slice(0,10);
+  if(monthVal){
+    filtered = allChecks.filter(c=>{
+      const d = new Date(c.checked_at);
+      const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+      return key === monthVal;
+    });
+    fileSuffix = monthVal;
+  }
+  const rows=[['Equipment','Location','Staff','Date/Time','Result','Pass','Fail']];
+  filtered.forEach(c=>{
     const meta=EQUIP_META[c.equipment_id];
     rows.push([meta?meta.name:c.equipment_id, meta?meta.location:'', c.staff_name||'', fmtTime(c.checked_at), c.overall_status, c.pass_count||0, c.fail_count||0]);
   });
   const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
   const a=document.createElement('a');
   a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
-  a.download=`rothschild-ward-checks-${new Date().toISOString().slice(0,10)}.csv`;
+  a.download=`rothschild-ward-checks-${fileSuffix}.csv`;
   a.click();
 }
 
